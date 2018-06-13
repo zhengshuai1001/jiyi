@@ -1,22 +1,20 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <HelloWorld  @click="aa"/>
+    <!-- <img src="./assets/logo.png">
+    <HelloWorld/> -->
+    <Unit/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld'
+// import HelloWorld from './components/HelloWorld'
+import Unit from "./components/Unit";
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
-  },
-  methods: {
-    aa() {
-      alert("aaa");
-    }
+    // HelloWorld,
+    Unit
   }
 }
 </script>
