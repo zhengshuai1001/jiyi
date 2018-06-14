@@ -72,6 +72,22 @@ const webpackConfig = merge(baseWebpackConfig, {
         // https://github.com/kangax/html-minifier#options-quick-reference
       },
       // necessary to consistently work with multiple chunks via CommonsChunkPlugin
+      chunks: ['manifest', 'vendor', 'app'],
+      chunksSortMode: 'dependency'
+    }),
+    new HtmlWebpackPlugin({
+      filename: config.build.runMap,
+      template: 'runMap.html',
+      inject: true,
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeAttributeQuotes: true
+        // more options:
+        // https://github.com/kangax/html-minifier#options-quick-reference
+      },
+      // necessary to consistently work with multiple chunks via CommonsChunkPlugin
+      chunks: ['manifest', 'vendor', 'runMap'],
       chunksSortMode: 'dependency'
     }),
     // keep module.id stable when vendor modules does not change

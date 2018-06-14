@@ -39,6 +39,7 @@ module.exports = {
   build: {
     // Template for index.html
     index: path.resolve(__dirname, '../dist/index.html'),
+    runMap: path.resolve(__dirname, '../dist/runMap.html'),
 
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
