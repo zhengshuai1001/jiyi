@@ -1,6 +1,5 @@
 <template>
 	<div class="run-map-page">
-		{{msg}}
 	<div class="demo">
 		<canvas id="myCanvas" width="850" height="650"></canvas>
 	</div>
@@ -11,20 +10,22 @@ export default {
 	name: "RunMap",
 	data() {
 		return {
-			msg: "good love 郑国庆的第一个 Vue 多页面开发页面",
 			ctx: null,
 		}
 	},
 	mounted() {
 		this.ctx = document.getElementById("myCanvas").getContext("2d");
-		this.drawRoundedRect(this.ctx, 20, 140, 110, 360, 40, 10, true, false, 2, "#595959", "#959595");
-		this.drawRoundedRect(this.ctx, 140, 140, 110, 360, 10, 10, true, false, 2, "#595959", "#959595");
+		this.drawRoundedRect(this.ctx, 20, 140, 107, 360, 40, 10, true, false, 2, "#595959", "#959595");
+		this.drawRoundedRect(this.ctx, 143, 140, 107, 360, 10, 10, true, false, 2, "#595959", "#959595");
 
-		this.drawRoundedRect(this.ctx, 430, 140, 108, 358, 10, 10, true, true, 2, "#595959", "#959595");
-		this.drawRoundedRect(this.ctx, 310, 140, 108, 358, 10, 10, true, true, 2, "#595959", "#959595");
+		this.drawRoundedRect(this.ctx, 310, 140, 105, 358, 10, 10, true, true, 2, "#595959", "#959595");
+		this.drawRoundedRect(this.ctx, 433, 140, 105, 358, 10, 10, true, true, 2, "#595959", "#959595");
 
-		this.drawRoundedRect(this.ctx, 600, 140, 110, 360, 10, 10, true, false, 2, "#595959", "#959595");
-		this.drawRoundedRect(this.ctx, 720, 140, 110, 360, 10, 40, true, false, 2, "#595959", "#959595");
+		this.drawRoundedRect(this.ctx, 600, 140, 107, 360, 10, 10, true, false, 2, "#595959", "#959595");
+		this.drawRoundedRect(this.ctx, 723, 140, 107, 360, 10, 40, true, false, 2, "#595959", "#959595");
+
+		//绘画煤仓
+		this.drawCoalBunker();
 
 	},
 	methods: {
@@ -56,6 +57,66 @@ export default {
 			}
 			ctx.closePath();
 			ctx.restore(); 
+		},
+		drawCoalBunker() {
+
+			let startX = 754.5;
+			let starty = 44.5;
+
+			for (let i = 0; i < 4; i++) {
+				for (let j = 0; j < 6; j++) {
+					this.drawCoalBunkerOne(this.ctx, startX, starty);
+					startX -= 24;
+				}
+				startX -= 42;
+			}
+
+		},
+		drawCoalBunkerOne(ctx, x, y, mcArray = []) {
+
+			ctx.save();
+			ctx.translate(x, y);
+			ctx.beginPath();
+			ctx.fillStyle = '#FFFFFF';
+			ctx.moveTo(1, 1); 
+			ctx.lineTo(18, 1);
+			ctx.lineTo(18, 21); 
+			ctx.lineTo(10, 40);
+			ctx.lineTo(1, 21);
+			ctx.closePath();
+			ctx.fill();
+
+			ctx.globalCompositeOperation = 'source-atop';
+
+			// mcArray.map((value, index)=>{
+				ctx.beginPath();
+				ctx.fillStyle='#78a8e8';
+				ctx.fillRect(1,10,17,15);
+				ctx.closePath();
+			// })
+
+
+			ctx.beginPath();
+			ctx.fillStyle='#e86e6b';
+			ctx.fillRect(1,25,17,15);
+			ctx.closePath();
+
+			ctx.restore();
+
+
+			ctx.save();
+			ctx.translate(x, y);
+			ctx.beginPath();
+			ctx.strokeStyle = "#2070c2"; 
+			ctx.lineWidth = 1;
+			ctx.moveTo(1, 0); 
+			ctx.lineTo(18, 0);
+			ctx.lineTo(18, 20); 
+			ctx.lineTo(10, 41);
+			ctx.lineTo(1, 20);
+			ctx.closePath();
+			ctx.stroke();
+			ctx.restore();
 		}
 	}
 }
