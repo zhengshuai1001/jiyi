@@ -9,6 +9,20 @@
 				'top': liftingArmImg[0].top + 'px',
 				'transform': 'rotateX(45deg) rotateZ('+liftingArmImg[0].rotation+'deg)',
 			}"></div>
+			<div 
+			class="lifting-arm-img" 
+			:style="{ 
+				'left': liftingArmImg[1].left + 'px',
+				'top': liftingArmImg[1].top + 'px',
+				'transform': 'rotateX(45deg) rotateZ('+liftingArmImg[1].rotation+'deg)',
+			}"></div>
+			<div 
+			class="lifting-arm-img" 
+			:style="{ 
+				'left': liftingArmImg[2].left + 'px',
+				'top': liftingArmImg[2].top + 'px',
+				'transform': 'rotateX(45deg) rotateZ('+liftingArmImg[2].rotation+'deg)',
+			}"></div>
 	</div>
 	</div>
 </template>
@@ -24,18 +38,24 @@ export default {
 					top: 0,
 					rotation: 0,
 				},
-			]
+				{
+					left: 0,
+					top: 0,
+					rotation: 0,
+				},
+				{
+					left: 0,
+					top: 0,
+					rotation: 0,
+				},
+			],
+			belt: {
+				"1a": 0,
+			},
+			lmq: [ 8, 18 ],//犁煤器，对应11a、11b皮带上的煤落向哪个煤仓
 		}
 	},
 	mounted() {
-		// this.liftingArmImg[0] = {
-		// 	left: 100,
-		// 	top: 200,
-		// 	rotation: 90,
-		// }
-		this.liftingArmImg[0].left = 100;
-		this.liftingArmImg[0].top = 200;
-		this.liftingArmImg[0].rotation = 90;
 
 		this.ctx = document.getElementById("myCanvas").getContext("2d");
 		this.drawRoundedRect(this.ctx, 20, 140, 107, 360, 40, 10, true, false, 2, "#595959", "#959595");
@@ -61,11 +81,22 @@ export default {
 		this.drawCoalHeapOne(this.ctx, require("../assets/CoalHeap/3-201.png"), 603, 170, 100, 206.4 );
 		this.drawCoalHeapOne(this.ctx, require("../assets/CoalHeap/3-203.png"), 723, 170, 100, 81.4 );
 		
-		//画一个斗轮机
-		this.drawBucketWheelOne(this.ctx, 130, 201, 45, 0);
+		//画三个斗轮机
+		this.drawBucketWheelOne(this.ctx, 130, 101, -45, 0, 0);
+		this.drawBucketWheelOne(this.ctx, 420, 201, 45, 0, 1);
+		this.drawBucketWheelOne(this.ctx, 710, 251, 135, 0, 2);
 
+		//画所有的转运站
+		this.drawTransferStationAll()
+
+		//画皮带，重头戏
+		this.drawBelt(this.ctx);
+
+		//画船
+		this.drawShip(this.ctx);
 	},
 	methods: {
+		//画煤堆得背景
 		drawRoundedRect(ctx, x, y, width, height, r_left, r_right, fill, stroke, lineWidth, strokeStyle, fillStyle)  { 
 			ctx.save(); 
 			ctx.beginPath(); 
@@ -95,9 +126,11 @@ export default {
 			ctx.closePath();
 			ctx.restore(); 
 		},
+		//画所有煤仓
 		drawCoalBunker() {
 
-			let startX = 754.5;
+			// let startX = 754.5;
+			let startX = 674.5; //缩短间距
 			let starty = 34.5;
 
 			for (let i = 0; i < 4; i++) {
@@ -125,15 +158,18 @@ export default {
 						default:
 							break;
 					}
-					this.drawCoalBunkerOne(this.ctx, startX, starty, [], fontText, "#78a8e8", i);
-					startX -= 24;
+					let mcIndex = i * 6 + j + 1; //煤仓索引
+					this.drawCoalBunkerOne(this.ctx, startX, starty, [], fontText, "#78a8e8", i, mcIndex);
+					// startX -= 24;
+					startX -= 23; //缩短间距
 				}
-				startX -= 42;
+				// startX -= 42;
+				startX -= 30; //缩短间距
 			}
 
 		},
 		//画一个煤仓
-		drawCoalBunkerOne(ctx, x, y, mcArray = [], fontText, fontColor, outerIndex) {
+		drawCoalBunkerOne(ctx, x, y, mcArray = [], fontText, fontColor, outerIndex, mcIndex) {
 
 			ctx.save();
 			ctx.translate(x, y);
@@ -193,6 +229,14 @@ export default {
 				ctx.fillText(`#${outerIndex + 1}机组`, 0, 76);
 				ctx.closePath();
 			}
+
+			//画两个犁煤器，先画长的，再画短的
+			if (mcIndex == this.lmq[0]) {
+				this.drawCoalPloughLong(ctx, x);
+			}
+			if (mcIndex == this.lmq[1]) {
+				this.drawCoalPloughShort(ctx, x);
+			}
 			ctx.restore();
 		},
 		//画一个煤堆
@@ -206,7 +250,7 @@ export default {
 			};
 		},
 		//画一个斗轮机
-		drawBucketWheelOne(ctx, x, end, rotation, status){
+		drawBucketWheelOne(ctx, x, end, rotation, status, index){
 			let y = 140 + 360 - (end * 1.2);
 			let imageObj = new Image();
 			imageObj.src = require("../assets/fuselage.png"); //斗轮机的机身部分
@@ -216,22 +260,178 @@ export default {
 				// ctx.restore();
 
 				//画斗轮机的吊臂
-				this.drawLiftingArm(x, y, rotation, status);
+				this.drawLiftingArm(x, y, rotation, status, index);
 			};
 		},
 		//画斗轮机的吊臂
-		drawLiftingArm(x, y, rotation, status) {
+		drawLiftingArm(x, y, rotation, status, index) {
 			// this.liftingArmImg[0] = {
 			// 	left: x,
 			// 	top: y,
 			// 	rotation,
 			// }
-			// this.liftingArmImg[0].left = x;
-			// this.liftingArmImg[0].top = y;
-			// this.liftingArmImg[0].rotation = rotation;
-
-			console.log(this.liftingArmImg[0]);
+			this.liftingArmImg[index].left = x;
+			this.liftingArmImg[index].top = y - 40;
+			this.liftingArmImg[index].rotation = rotation;
 		},
+		//画一个转运站，皮带中间的那些转运站
+		drawTransferStationOne(ctx, x, y){
+			let imageObj = new Image();
+			imageObj.src = require("../assets/transferStation.png"); //中转站
+			imageObj.onload = () => {
+				// ctx.save();
+				ctx.drawImage(imageObj, x, y, 31, 16);
+				// ctx.restore();
+			};
+		},
+		//画所有的转运站
+		drawTransferStationAll(){
+			this.drawTransferStationOne(this.ctx, 120, 120); //-23
+			this.drawTransferStationOne(this.ctx, 410, 120);
+			this.drawTransferStationOne(this.ctx, 700, 120);
+			this.drawTransferStationOne(this.ctx, 700, 3);
+
+			this.drawTransferStationOne(this.ctx, 120, 510); //-23
+			this.drawTransferStationOne(this.ctx, 410, 510);
+			this.drawTransferStationOne(this.ctx, 700, 510);
+
+			this.drawTransferStationOne(this.ctx, 700, 533);
+
+			this.drawTransferStationOne(this.ctx, 120, 560);
+
+			//画一个皮带的终点
+			this.drawBeltEnd(this.ctx);
+		},
+		//画皮带的终点,只有一个，定位直接赋值
+		drawBeltEnd(ctx) {
+			let imageObj = new Image();
+			imageObj.src = require("../assets/beltEnd.png"); //皮带的终点
+			imageObj.onload = () => {
+				// ctx.save();
+				ctx.drawImage(imageObj, 20, 1, 20, 20);
+				// ctx.restore();
+			};
+		},
+
+		//画犁煤器,长的
+		drawCoalPloughLong(ctx, x) {
+			let imageObj = new Image();
+			imageObj.src = require("../assets/coalPloughLong.png");
+			imageObj.onload = () => {
+				// ctx.save();
+				ctx.drawImage(imageObj, x + 4, 5, 21, 24);
+				// ctx.restore();
+			};
+		},
+		//画犁煤器,短的
+		drawCoalPloughShort(ctx, x) {
+			let imageObj = new Image();
+			imageObj.src = require("../assets/coalPloughShort.png");
+			imageObj.onload = () => {
+				// ctx.save();
+				ctx.drawImage(imageObj, x + 4, 15, 17, 15);
+				// ctx.restore();
+			};
+		},
+
+		//画卸船机, 长的
+		drawShipUnloaderLong(ctx) {
+			let imageObj = new Image();
+			imageObj.src = require("../assets/shipUnloaderLong.png");
+			imageObj.onload = () => {
+				// ctx.save();
+				ctx.drawImage(imageObj, 160, 550, 43, 89);
+				// ctx.restore();
+			};
+		},
+		//画卸船机, 短的
+		drawShipUnloaderShort(ctx) {
+			let imageObj = new Image();
+			imageObj.src = require("../assets/shipUnloaderShort.png");
+			imageObj.onload = () => {
+				// ctx.save();
+				ctx.drawImage(imageObj, 230, 550, 43, 69);
+				// ctx.restore();
+			};
+		},
+		//画船
+		drawShip(ctx) {
+			let imageObj = new Image();
+			imageObj.src = require("../assets/ship.png");
+			imageObj.onload = () => {
+				// ctx.save();
+				ctx.drawImage(imageObj, 150, 615, 178, 31);
+				// ctx.restore();
+				this.drawShipUnloaderLong(ctx);
+				this.drawShipUnloaderShort(ctx);
+				//等船绘制完成后再去绘制卸船机
+			};
+		},
+		//画皮带，重头戏
+		drawBelt(ctx) {
+			this.drawDashedLine(ctx, [[710, 7], [30, 7] ] ); // 最顶层的皮带, 1
+			this.drawDashedLine(ctx, [[710, 16], [30, 16] ] ); // 从上往下第二个的皮带, 2
+
+			this.drawDashedLine(ctx, [[710, 120], [710, 7] ], "#22AC38" ); // 3,左
+			this.drawDashedLine(ctx, [[720, 120], [720, 7] ] ); // 4,右
+
+			this.drawDashedLine(ctx, [[710, 124], [130, 124] ], "#22AC38" ); // 5, 上
+			this.drawDashedLine(ctx, [[710, 132], [420, 132] ], "#22AC38"  ); // 6， 下
+
+			this.drawDashedLine(ctx, [[135, 510], [135, 120] ] ); //7 左
+			this.drawDashedLine(ctx, [[425, 510], [425, 120] ], "#22AC38" ); //8 中
+			this.drawDashedLine(ctx, [[715, 510], [715, 120] ], "#22AC38" ); //9 右
+
+
+
+			this.drawDashedLine(ctx, [[710, 514], [130, 514] ] ); // 5, 上
+			this.drawDashedLine(ctx, [[710, 522], [130, 522] ], "#22AC38"  ); // 6， 下
+
+			this.drawDashedLine(ctx, [[710, 545], [710, 522] ], "#22AC38" ); // 3,左
+			this.drawDashedLine(ctx, [[720, 545], [720, 522] ] ); // 4,右
+
+			this.drawDashedLine(ctx, [[130, 570], [130, 537], [710, 537] ], "#22AC38" ); // 5, 上
+			this.drawDashedLine(ctx, [[138, 570], [138, 545], [710, 545] ]  ); // 6， 下
+
+			this.drawDashedLine(ctx, [[710, 564], [130, 564] ] ); // 5, 上
+			this.drawDashedLine(ctx, [[710, 572], [130, 572] ], "#22AC38"  ); // 6， 下
+		},
+		// 画一条皮带
+		// 绘制虚线或实线
+    // @param {Array} points - 二维数组，表示所有的坐标点,第一个点默认为起点
+    // @param {Array} clearArea - 二维数组, 第一维长度为3, 第二维长度为4,表示煤仓运转时虚线运动范围,擦除之前绘制的所有内容的方法
+    // @param {Array} setLineDash - 点划线间距
+    // @param {Number} lineWidth - 线宽
+    // @param {String} color - 线段颜色
+    drawDashedLine(ctx, points, color = "#FF423C", clearArea = null, setLineDash = [4], lineWidth = 4) {
+      // let ctx = this.ctx;
+      ctx.save();
+      ctx.beginPath();
+      ctx.lineWidth = lineWidth;
+      ctx.strokeStyle = color;
+      // ctx.clearRect(0,0, ctx.canvas.width, ctx.canvas.height);
+      // ctx.clearRect(0,0, 385, 30);
+      // ctx.clearRect(268,58, 53, 60);
+      // ctx.clearRect(318,0, 70, 60);
+      if (clearArea) {
+        //如果清除区域存在，则显示虚线
+        // ctx.clearRect(clearArea[0][0],clearArea[0][1],clearArea[0][2],clearArea[0][3]);
+        // ctx.clearRect(clearArea[1][0],clearArea[1][1],clearArea[1][2],clearArea[1][3]);
+        // ctx.clearRect(clearArea[2][0],clearArea[2][1],clearArea[2][2],clearArea[2][3]);  
+      }
+      //ctx.setLineDash(setLineDash);
+      //ctx.lineDashOffset = -this.offset; 
+      points.map((point, index)=>{
+        if (index == 0) {
+          ctx.moveTo(point[0], point[1]);
+        } else {
+          ctx.lineTo(point[0], point[1]);
+        }
+      })
+      ctx.stroke();
+      ctx.closePath();
+      ctx.restore();
+    }
 	}
 }
 </script>
