@@ -1,6 +1,7 @@
 <template>
 	<div class="run-map-page">
 	<div class="canvas-box">
+		<canvas id="myCanvasBelt" width="850" height="650"></canvas>
 		<canvas id="myCanvas" width="850" height="650"></canvas>
 		<div 
 			class="lifting-arm-img" 
@@ -32,6 +33,7 @@ export default {
 	data() {
 		return {
 			ctx: null,
+			ctxBelt: null,
 			liftingArmImg: [
 				{
 					left: 0,
@@ -53,11 +55,13 @@ export default {
 				"1a": 0,
 			},
 			lmq: [ 8, 18 ],//犁煤器，对应11a、11b皮带上的煤落向哪个煤仓
+			offset: 0,
 		}
 	},
 	mounted() {
 
 		this.ctx = document.getElementById("myCanvas").getContext("2d");
+		this.ctxBelt = document.getElementById("myCanvasBelt").getContext("2d");
 		this.drawRoundedRect(this.ctx, 20, 140, 107, 360, 40, 10, true, false, 2, "#595959", "#959595");
 		this.drawRoundedRect(this.ctx, 143, 140, 107, 360, 10, 10, true, false, 2, "#595959", "#959595");
 
@@ -82,15 +86,17 @@ export default {
 		this.drawCoalHeapOne(this.ctx, require("../assets/CoalHeap/3-203.png"), 723, 170, 100, 81.4 );
 		
 		//画三个斗轮机
-		this.drawBucketWheelOne(this.ctx, 130, 101, -45, 0, 0);
-		this.drawBucketWheelOne(this.ctx, 420, 201, 45, 0, 1);
-		this.drawBucketWheelOne(this.ctx, 710, 251, 135, 0, 2);
+		this.drawBucketWheelOne(this.ctx, 124, 101, -50, 0, 0); // old x: 130
+		this.drawBucketWheelOne(this.ctx, 413, 201, 45, 0, 1);	// old x: 420
+		this.drawBucketWheelOne(this.ctx, 704, 251, 135, 0, 2);	// old x: 710
 
 		//画所有的转运站
 		this.drawTransferStationAll()
 
 		//画皮带，重头戏
-		this.drawBelt(this.ctx);
+		// this.drawBelt(this.ctx);
+		// this.animation(this.ctx);
+		this.animation(this.ctxBelt);
 
 		//画船
 		this.drawShip(this.ctx);
@@ -256,7 +262,7 @@ export default {
 			imageObj.src = require("../assets/fuselage.png"); //斗轮机的机身部分
 			imageObj.onload = () => {
 				// ctx.save();
-				ctx.drawImage(imageObj, x, y, 10, 42.7);
+				ctx.drawImage(imageObj, x, y, 20, 88);
 				// ctx.restore();
 
 				//画斗轮机的吊臂
@@ -271,7 +277,8 @@ export default {
 			// 	rotation,
 			// }
 			this.liftingArmImg[index].left = x;
-			this.liftingArmImg[index].top = y - 40;
+			// this.liftingArmImg[index].top = y - 40;
+			this.liftingArmImg[index].top = y - 40 - 30;
 			this.liftingArmImg[index].rotation = rotation;
 		},
 		//画一个转运站，皮带中间的那些转运站
@@ -319,7 +326,7 @@ export default {
 			imageObj.src = require("../assets/coalPloughLong.png");
 			imageObj.onload = () => {
 				// ctx.save();
-				ctx.drawImage(imageObj, x + 4, 5, 21, 24);
+				ctx.drawImage(imageObj, x + 4, 4.5, 21, 24);
 				// ctx.restore();
 			};
 		},
@@ -329,7 +336,7 @@ export default {
 			imageObj.src = require("../assets/coalPloughShort.png");
 			imageObj.onload = () => {
 				// ctx.save();
-				ctx.drawImage(imageObj, x + 4, 15, 17, 15);
+				ctx.drawImage(imageObj, x + 4, 14.5, 17, 15);
 				// ctx.restore();
 			};
 		},
@@ -369,32 +376,33 @@ export default {
 		},
 		//画皮带，重头戏
 		drawBelt(ctx) {
-			this.drawDashedLine(ctx, [[710, 7], [30, 7] ] ); // 最顶层的皮带, 1
-			this.drawDashedLine(ctx, [[710, 16], [30, 16] ] ); // 从上往下第二个的皮带, 2
+			ctx.clearRect(0, 0, 850, 650);
+			this.drawDashedLine(ctx, [[710, 7], [30, 7]], "#FF423C", true); // 最顶层的皮带, 1
+			this.drawDashedLine(ctx, [[710, 16], [30, 16]]); // 从上往下第二个的皮带, 2
 
-			this.drawDashedLine(ctx, [[710, 120], [710, 7] ], "#22AC38" ); // 3,左
-			this.drawDashedLine(ctx, [[720, 120], [720, 7] ] ); // 4,右
+			this.drawDashedLine(ctx, [[710, 120], [710, 7]], "#22AC38"); // 3,左
+			this.drawDashedLine(ctx, [[720, 120], [720, 7]], "#FF423C", true); // 4,右
 
-			this.drawDashedLine(ctx, [[710, 124], [130, 124] ], "#22AC38" ); // 5, 上
-			this.drawDashedLine(ctx, [[710, 132], [420, 132] ], "#22AC38"  ); // 6， 下
+			this.drawDashedLine(ctx, [[130, 124], [710, 124]], "#FF423C", true); // 5, 上
+			this.drawDashedLine(ctx, [[420, 132], [710, 132]], "#22AC38"); // 6， 下
 
-			this.drawDashedLine(ctx, [[135, 510], [135, 120] ] ); //7 左
-			this.drawDashedLine(ctx, [[425, 510], [425, 120] ], "#22AC38" ); //8 中
-			this.drawDashedLine(ctx, [[715, 510], [715, 120] ], "#22AC38" ); //9 右
+			this.drawDashedLine(ctx, [[135, 510], [135, 120]], "#FF423C", true); //7 左
+			this.drawDashedLine(ctx, [[425, 510], [425, 120]], "#22AC38"); //8 中
+			this.drawDashedLine(ctx, [[715, 510], [715, 120]], "#22AC38"); //9 右
 
 
 
-			this.drawDashedLine(ctx, [[710, 514], [130, 514] ] ); // 5, 上
-			this.drawDashedLine(ctx, [[710, 522], [130, 522] ], "#22AC38"  ); // 6， 下
+			this.drawDashedLine(ctx, [[710, 514], [130, 514]], "#FF423C", true); // 5, 上
+			this.drawDashedLine(ctx, [[710, 522], [130, 522]], "#22AC38"); // 6， 下
 
-			this.drawDashedLine(ctx, [[710, 545], [710, 522] ], "#22AC38" ); // 3,左
-			this.drawDashedLine(ctx, [[720, 545], [720, 522] ] ); // 4,右
+			this.drawDashedLine(ctx, [[710, 545], [710, 522]], "#22AC38"); // 3,左
+			this.drawDashedLine(ctx, [[720, 545], [720, 522]], "#FF423C", true); // 4,右
 
-			this.drawDashedLine(ctx, [[130, 570], [130, 537], [710, 537] ], "#22AC38" ); // 5, 上
-			this.drawDashedLine(ctx, [[138, 570], [138, 545], [710, 545] ]  ); // 6， 下
+			this.drawDashedLine(ctx, [[130, 570], [130, 537], [710, 537]], "#22AC38"); // 5, 上
+			this.drawDashedLine(ctx, [[138, 570], [138, 545], [710, 545]], "#FF423C", true); // 6， 下
 
-			this.drawDashedLine(ctx, [[710, 564], [130, 564] ] ); // 5, 上
-			this.drawDashedLine(ctx, [[710, 572], [130, 572] ], "#22AC38"  ); // 6， 下
+			this.drawDashedLine(ctx, [[710, 564], [130, 564]], "#FF423C", true); // 5, 上
+			this.drawDashedLine(ctx, [[710, 572], [130, 572]], "#22AC38"); // 6， 下
 		},
 		// 画一条皮带
 		// 绘制虚线或实线
@@ -417,10 +425,10 @@ export default {
         //如果清除区域存在，则显示虚线
         // ctx.clearRect(clearArea[0][0],clearArea[0][1],clearArea[0][2],clearArea[0][3]);
         // ctx.clearRect(clearArea[1][0],clearArea[1][1],clearArea[1][2],clearArea[1][3]);
-        // ctx.clearRect(clearArea[2][0],clearArea[2][1],clearArea[2][2],clearArea[2][3]);  
+        // ctx.clearRect(0, 0, 850, 650);  
+      	ctx.setLineDash(setLineDash);
+      	ctx.lineDashOffset = -this.offset; 
       }
-      //ctx.setLineDash(setLineDash);
-      //ctx.lineDashOffset = -this.offset; 
       points.map((point, index)=>{
         if (index == 0) {
           ctx.moveTo(point[0], point[1]);
@@ -431,7 +439,19 @@ export default {
       ctx.stroke();
       ctx.closePath();
       ctx.restore();
-    }
+    },
+		animation(ctx) {
+      cancelAnimationFrame(this.animationTimer);
+      let then = this;
+      this.animationTimer = requestAnimationFrame(function fn() {
+        then.offset++;
+        if (then.offset > 16) {
+          then.offset = 0;
+        }
+        then.drawBelt(ctx);
+        then.animationTimer = requestAnimationFrame(fn);
+      });
+    },
 	}
 }
 </script>
