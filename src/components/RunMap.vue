@@ -28,6 +28,25 @@
 	</div>
 </template>
 <script>
+
+import axios from "axios";
+
+let Ajax = axios.create({
+  baseURL:'https://www.easy-mock.com/mock/5b2bc70743896129857dc8dc/jiyi',
+  timeout: 3000,
+  // headers: { 'Content-Type': 'application/json' },
+  // responseType: 'json',
+});
+
+Ajax.interceptors.response.use(function (response) {
+	// 对响应数据做点什么	
+	
+  return response;
+}, function (error) {
+  // 对响应错误做点什么
+  return Promise.reject(error);
+});
+
 export default {
 	name: "RunMap",
 	data() {
@@ -86,9 +105,9 @@ export default {
 		this.drawCoalHeapOne(this.ctx, require("../assets/CoalHeap/3-203.png"), 723, 170, 100, 81.4 );
 		
 		//画三个斗轮机
-		this.drawBucketWheelOne(this.ctx, 124, 101, -50, 0, 0); // old x: 130
-		this.drawBucketWheelOne(this.ctx, 413, 201, 45, 0, 1);	// old x: 420
-		this.drawBucketWheelOne(this.ctx, 704, 251, 135, 0, 2);	// old x: 710
+		// this.drawBucketWheelOne(this.ctx, 124, 101, -50, 0, 0); // old x: 130
+		// this.drawBucketWheelOne(this.ctx, 413, 201, 45, 0, 1);	// old x: 420
+		// this.drawBucketWheelOne(this.ctx, 704, 251, 135, 0, 2);	// old x: 710
 
 		//画所有的转运站
 		this.drawTransferStationAll()
@@ -100,6 +119,10 @@ export default {
 
 		//画船
 		this.drawShip(this.ctx);
+
+		//发送ajax请求
+		this.ajaxGetData();
+		
 	},
 	methods: {
 		//画煤堆得背景
@@ -319,7 +342,6 @@ export default {
 				// ctx.restore();
 			};
 		},
-
 		//画犁煤器,长的
 		drawCoalPloughLong(ctx, x) {
 			let imageObj = new Image();
@@ -340,7 +362,6 @@ export default {
 				// ctx.restore();
 			};
 		},
-
 		//画卸船机, 长的
 		drawShipUnloaderLong(ctx) {
 			let imageObj = new Image();
@@ -406,52 +427,76 @@ export default {
 		},
 		// 画一条皮带
 		// 绘制虚线或实线
-    // @param {Array} points - 二维数组，表示所有的坐标点,第一个点默认为起点
-    // @param {Array} clearArea - 二维数组, 第一维长度为3, 第二维长度为4,表示煤仓运转时虚线运动范围,擦除之前绘制的所有内容的方法
-    // @param {Array} setLineDash - 点划线间距
-    // @param {Number} lineWidth - 线宽
-    // @param {String} color - 线段颜色
-    drawDashedLine(ctx, points, color = "#FF423C", clearArea = null, setLineDash = [4], lineWidth = 4) {
-      // let ctx = this.ctx;
-      ctx.save();
-      ctx.beginPath();
-      ctx.lineWidth = lineWidth;
-      ctx.strokeStyle = color;
-      // ctx.clearRect(0,0, ctx.canvas.width, ctx.canvas.height);
-      // ctx.clearRect(0,0, 385, 30);
-      // ctx.clearRect(268,58, 53, 60);
-      // ctx.clearRect(318,0, 70, 60);
-      if (clearArea) {
-        //如果清除区域存在，则显示虚线
-        // ctx.clearRect(clearArea[0][0],clearArea[0][1],clearArea[0][2],clearArea[0][3]);
-        // ctx.clearRect(clearArea[1][0],clearArea[1][1],clearArea[1][2],clearArea[1][3]);
-        // ctx.clearRect(0, 0, 850, 650);  
-      	ctx.setLineDash(setLineDash);
-      	ctx.lineDashOffset = -this.offset; 
-      }
-      points.map((point, index)=>{
-        if (index == 0) {
-          ctx.moveTo(point[0], point[1]);
-        } else {
-          ctx.lineTo(point[0], point[1]);
-        }
-      })
-      ctx.stroke();
-      ctx.closePath();
-      ctx.restore();
-    },
+		// @param {Array} points - 二维数组，表示所有的坐标点,第一个点默认为起点
+		// @param {Array} clearArea - 二维数组, 第一维长度为3, 第二维长度为4,表示煤仓运转时虚线运动范围,擦除之前绘制的所有内容的方法
+		// @param {Array} setLineDash - 点划线间距
+		// @param {Number} lineWidth - 线宽
+		// @param {String} color - 线段颜色
+		drawDashedLine(ctx, points, color = "#FF423C", clearArea = null, setLineDash = [4], lineWidth = 4) {
+			// let ctx = this.ctx;
+			ctx.save();
+			ctx.beginPath();
+			ctx.lineWidth = lineWidth;
+			ctx.strokeStyle = color;
+			// ctx.clearRect(0,0, ctx.canvas.width, ctx.canvas.height);
+			// ctx.clearRect(0,0, 385, 30);
+			// ctx.clearRect(268,58, 53, 60);
+			// ctx.clearRect(318,0, 70, 60);
+			if (clearArea) {
+				//如果清除区域存在，则显示虚线
+				// ctx.clearRect(clearArea[0][0],clearArea[0][1],clearArea[0][2],clearArea[0][3]);
+				// ctx.clearRect(clearArea[1][0],clearArea[1][1],clearArea[1][2],clearArea[1][3]);
+				// ctx.clearRect(0, 0, 850, 650);  
+				ctx.setLineDash(setLineDash);
+				ctx.lineDashOffset = -this.offset; 
+			}
+			points.map((point, index)=>{
+				if (index == 0) {
+				ctx.moveTo(point[0], point[1]);
+				} else {
+				ctx.lineTo(point[0], point[1]);
+				}
+			})
+			ctx.stroke();
+			ctx.closePath();
+			ctx.restore();
+		},
 		animation(ctx) {
-      cancelAnimationFrame(this.animationTimer);
-      let then = this;
-      this.animationTimer = requestAnimationFrame(function fn() {
-        then.offset++;
-        if (then.offset > 16) {
-          then.offset = 0;
-        }
-        then.drawBelt(ctx);
-        then.animationTimer = requestAnimationFrame(fn);
-      });
-    },
+			cancelAnimationFrame(this.animationTimer);
+			let then = this;
+			this.animationTimer = requestAnimationFrame(function fn() {
+				then.offset++;
+				if (then.offset > 16) {
+				then.offset = 0;
+				}
+				then.drawBelt(ctx);
+				then.animationTimer = requestAnimationFrame(fn);
+			});
+		},
+		ajaxGetData() {
+			Ajax.get("/runMap").then(res => {
+				// console.log(res.data);
+				if (res.data) {
+					let { dlj, dzc, lmq, mc, md, pd, st, scj } = res.data;
+
+					//斗轮机
+					this.handle_dlj(dlj);
+
+				}
+				
+			}).catch(error => {
+				//网络请求错误
+				console.log(error);
+			});
+		},
+		handle_dlj(dlj) {
+			console.log(dlj);
+			
+			this.drawBucketWheelOne(this.ctx, 124, dlj[2].position, dlj[2].rotation, dlj[2].status, 0); // old x: 130
+			this.drawBucketWheelOne(this.ctx, 413, dlj[1].position, dlj[1].rotation, dlj[1].status, 1);	// old x: 420
+			this.drawBucketWheelOne(this.ctx, 704, dlj[0].position, dlj[0].rotation, dlj[0].status, 2);	// old x: 710
+		},
+
 	}
 }
 </script>
