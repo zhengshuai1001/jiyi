@@ -5,7 +5,8 @@
 		<canvas id="myCanvas" width="850" height="650"></canvas>
 		<div 
 			class="lifting-arm-img" 
-			:style="{ 
+			:style="{
+				'display': displayArm ? 'block' : 'none',
 				'left': liftingArmImg[0].left + 'px',
 				'top': liftingArmImg[0].top + 'px',
 				'transform': 'rotateX(45deg) rotateZ('+liftingArmImg[0].rotation+'deg)',
@@ -13,6 +14,7 @@
 			<div 
 			class="lifting-arm-img" 
 			:style="{ 
+				'display': displayArm ? 'block' : 'none',
 				'left': liftingArmImg[1].left + 'px',
 				'top': liftingArmImg[1].top + 'px',
 				'transform': 'rotateX(45deg) rotateZ('+liftingArmImg[1].rotation+'deg)',
@@ -20,6 +22,7 @@
 			<div 
 			class="lifting-arm-img" 
 			:style="{ 
+				'display': displayArm ? 'block' : 'none',
 				'left': liftingArmImg[2].left + 'px',
 				'top': liftingArmImg[2].top + 'px',
 				'transform': 'rotateX(45deg) rotateZ('+liftingArmImg[2].rotation+'deg)',
@@ -35,7 +38,7 @@ let Ajax = axios.create({
   baseURL:'https://www.easy-mock.com/mock/5b2bc70743896129857dc8dc/jiyi',
   timeout: 3000,
   // headers: { 'Content-Type': 'application/json' },
-  // responseType: 'json',
+  responseType: 'json',
 });
 
 Ajax.interceptors.response.use(function (response) {
@@ -75,6 +78,7 @@ export default {
 			},
 			lmq: [ 8, 18 ],//犁煤器，对应11a、11b皮带上的煤落向哪个煤仓
 			offset: 0,
+			displayArm: false,
 		}
 	},
 	mounted() {
@@ -91,18 +95,18 @@ export default {
 		this.drawRoundedRect(this.ctx, 723, 140, 107, 360, 10, 40, true, false, 2, "#595959", "#959595");
 
 		//绘画煤仓
-		this.drawCoalBunker();
+		// this.drawCoalBunker();
 
 		//绘画煤堆
 		//测试，先画一个煤堆试试
-		this.drawCoalHeapOne(this.ctx, require("../assets/CoalHeap/1-101.png"), 23, 170, 100, 183.4 );
-		this.drawCoalHeapOne(this.ctx, require("../assets/CoalHeap/1-103.png"), 146, 170, 100, 95.6 );
+		// this.drawCoalHeapOne(this.ctx, require("../assets/CoalHeap/1-101.png"), 23, 170, 100, 183.4 );
+		// this.drawCoalHeapOne(this.ctx, require("../assets/CoalHeap/1-103.png"), 146, 170, 100, 95.6 );
 
-		this.drawCoalHeapOne(this.ctx, require("../assets/CoalHeap/2-102.png"), 313, 170, 100, 89.2 );
-		this.drawCoalHeapOne(this.ctx, require("../assets/CoalHeap/2-104.png"), 436, 170, 100, 82 );
+		// this.drawCoalHeapOne(this.ctx, require("../assets/CoalHeap/2-102.png"), 313, 170, 100, 89.2 );
+		// this.drawCoalHeapOne(this.ctx, require("../assets/CoalHeap/2-104.png"), 436, 170, 100, 82 );
 
-		this.drawCoalHeapOne(this.ctx, require("../assets/CoalHeap/3-201.png"), 603, 170, 100, 206.4 );
-		this.drawCoalHeapOne(this.ctx, require("../assets/CoalHeap/3-203.png"), 723, 170, 100, 81.4 );
+		// this.drawCoalHeapOne(this.ctx, require("../assets/CoalHeap/3-201.png"), 603, 170, 100, 206.4 );
+		// this.drawCoalHeapOne(this.ctx, require("../assets/CoalHeap/3-203.png"), 723, 170, 100, 81.4 );
 		
 		//画三个斗轮机
 		// this.drawBucketWheelOne(this.ctx, 124, 101, -50, 0, 0); // old x: 130
@@ -260,10 +264,10 @@ export default {
 			}
 
 			//画两个犁煤器，先画长的，再画短的
-			if (mcIndex == this.lmq[0]) {
+			if (mcIndex == this.lmq[0] + 1 ) {
 				this.drawCoalPloughLong(ctx, x);
 			}
-			if (mcIndex == this.lmq[1]) {
+			if (mcIndex == this.lmq[1] + 1 ) {
 				this.drawCoalPloughShort(ctx, x);
 			}
 			ctx.restore();
@@ -274,7 +278,8 @@ export default {
 			imageObj.src = src;
 			imageObj.onload = () => {
 				// ctx.save();
-				ctx.drawImage(imageObj, x, y, w, h);
+				let yy = 170  + 320 - y * 1.2;
+				ctx.drawImage(imageObj, x, yy, w, h);
 				// ctx.restore();
 			};
 		},
@@ -285,7 +290,7 @@ export default {
 			imageObj.src = require("../assets/fuselage.png"); //斗轮机的机身部分
 			imageObj.onload = () => {
 				// ctx.save();
-				ctx.drawImage(imageObj, x, y, 20, 88);
+				ctx.drawImage(imageObj, x, y, 15, 66);
 				// ctx.restore();
 
 				//画斗轮机的吊臂
@@ -300,8 +305,8 @@ export default {
 			// 	rotation,
 			// }
 			this.liftingArmImg[index].left = x;
-			// this.liftingArmImg[index].top = y - 40;
-			this.liftingArmImg[index].top = y - 40 - 30;
+			this.liftingArmImg[index].top = y - 40 - 16;
+			// this.liftingArmImg[index].top = y - 40 - 30;
 			this.liftingArmImg[index].rotation = rotation;
 		},
 		//画一个转运站，皮带中间的那些转运站
@@ -477,10 +482,19 @@ export default {
 			Ajax.get("/runMap").then(res => {
 				// console.log(res.data);
 				if (res.data) {
-					let { dlj, dzc, lmq, mc, md, pd, st, scj } = res.data;
-
+					let { dlj, dzc, lmq, mc, md, pd, st, xcj } = res.data;
 					//斗轮机
 					this.handle_dlj(dlj);
+					//皮带
+					this.handle_pd(pd);
+					//煤仓
+					this.handle_mc(mc);
+					//犁煤器
+					this.handle_lmq(lmq);
+					//煤堆
+					this.handle_md(md);
+					//煤仓
+					this.handle_xcj(xcj);
 
 				}
 				
@@ -490,11 +504,60 @@ export default {
 			});
 		},
 		handle_dlj(dlj) {
-			console.log(dlj);
-			
-			this.drawBucketWheelOne(this.ctx, 124, dlj[2].position, dlj[2].rotation, dlj[2].status, 0); // old x: 130
-			this.drawBucketWheelOne(this.ctx, 413, dlj[1].position, dlj[1].rotation, dlj[1].status, 1);	// old x: 420
-			this.drawBucketWheelOne(this.ctx, 704, dlj[0].position, dlj[0].rotation, dlj[0].status, 2);	// old x: 710
+			if (!this.displayArm) {
+				this.displayArm = true;
+			}
+			this.drawBucketWheelOne(this.ctx, 127, dlj[2].position, dlj[2].rotation, dlj[2].status, 0); // old x: 130 124
+			this.drawBucketWheelOne(this.ctx, 416, dlj[1].position, dlj[1].rotation, dlj[1].status, 1);	// old x: 420 413
+			this.drawBucketWheelOne(this.ctx, 706, dlj[0].position, dlj[0].rotation, dlj[0].status, 2);	// old x: 710 704
+		},
+		handle_pd(pd) {
+			// console.log(pd);
+		},
+		handle_mc(mc) {
+			// console.log(mc);
+
+		},
+		handle_lmq(lmq) {
+			this.lmq = lmq;
+			//绘画煤仓
+			this.drawCoalBunker();
+		},
+		handle_md(md) {
+			// console.log(md);
+			let x = [723, 603, 723, 603, 436, 313, 436, 313, 146, 23, 146, 23];
+			let index = 0;
+			for (const i in md) {
+				if (md.hasOwnProperty(i)) {
+					const value = md[i];
+					// this.drawCoalHeapOne(this.ctx, "./pic/" + value.url, x[index], 170, 100, value.end - value.start );
+					this.drawCoalHeapOne(this.ctx, require("../assets/pic/" + value.url), x[index], value.end, 100, value.end - value.start );
+					index++;
+				}
+			}
+			// md.map((value, index)=>{
+			// 	this.drawCoalHeapOne(this.ctx, "./pic/" + value.url, x[index], 170, 100, value.end - value.start );
+			// });
+			// this.drawCoalHeapOne(this.ctx, require("../assets/pic/1-101.png"), 23, 170, 100, 183.4 );
+			// this.drawCoalHeapOne(this.ctx, require("../assets/pic/1-101.png"), 23, 170, 100, 183.4 );
+
+			// this.drawCoalHeapOne(this.ctx, require("../assets/pic/1-103.png"), 146, 170, 100, 95.6 );
+			// this.drawCoalHeapOne(this.ctx, require("../assets/pic/1-103.png"), 146, 170, 100, 95.6 );
+
+			// this.drawCoalHeapOne(this.ctx, require("../assets/pic/2-102.png"), 313, 170, 100, 89.2 );
+			// this.drawCoalHeapOne(this.ctx, require("../assets/pic/2-102.png"), 313, 170, 100, 89.2 );
+
+			// this.drawCoalHeapOne(this.ctx, require("../assets/pic/2-104.png"), 436, 170, 100, 82 );
+			// this.drawCoalHeapOne(this.ctx, require("../assets/pic/2-104.png"), 436, 170, 100, 82 );
+
+			// this.drawCoalHeapOne(this.ctx, require("../assets/pic/2-102.png"), 603, 170, 100, 206.4 );
+			// this.drawCoalHeapOne(this.ctx, require("../assets/pic/3-201.png"), 603, 170, 100, 206.4 );
+
+			// this.drawCoalHeapOne(this.ctx, require("../assets/pic/1-101.png"), 723, 170, 100, 81.4 );
+			// this.drawCoalHeapOne(this.ctx, require("../assets/pic/1-103.png"), 723, 170, 100, 81.4 );
+		},
+		handle_xcj(xcj) {
+			// console.log(xcj);
 		},
 
 	}
