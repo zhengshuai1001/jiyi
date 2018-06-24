@@ -79,7 +79,33 @@ export default {
 			lmq: [ 8, 18 ],//犁煤器，对应11a、11b皮带上的煤落向哪个煤仓
 			offset: 0,
 			displayArm: false,
+			dlj:[
+				{"position":106.5,"rotation":-40.5,"status":1},
+				{"position":61,"rotation":22.85,"status":0},
+				{"position":221.8,"rotation":47,"status":1}
+			],
 		}
+	},
+	computed: {
+		lmqStartXOne() {
+				let i = parseInt((this.lmq[0] - 1)/6);
+				let j = (this.lmq[0] - 1) - i*6;
+			return 674.5 - 23*i - 30*( i*5 + j) + 8;
+		},
+		lmqStartXTwo() {
+				let i = parseInt((this.lmq[1] - 1)/6);
+				let j = (this.lmq[1] - 1) - i*6;
+			return 674.5 - 23*i - 30*( i*5 + j) + 8;
+		},
+		dljPositionYOne() {
+			return 140 + 360 - (this.dlj[0].position * 1.2);
+		},
+		dljPositionYTwo() {
+			return 140 + 360 - (this.dlj[1].position * 1.2);
+		},
+		dljPositionYThree() {
+			return 140 + 360 - (this.dlj[2].position * 1.2);
+		},
 	},
 	mounted() {
 
@@ -324,6 +350,7 @@ export default {
 			this.drawTransferStationOne(this.ctx, 120, 120); //-23
 			this.drawTransferStationOne(this.ctx, 410, 120);
 			this.drawTransferStationOne(this.ctx, 700, 120);
+			this.drawTransferStationOne(this.ctx, 700, 80); //增加一个转运站
 			this.drawTransferStationOne(this.ctx, 700, 3);
 
 			this.drawTransferStationOne(this.ctx, 120, 510); //-23
@@ -403,18 +430,32 @@ export default {
 		//画皮带，重头戏
 		drawBelt(ctx) {
 			ctx.clearRect(0, 0, 850, 650);
-			this.drawDashedLine(ctx, [[710, 7], [30, 7]], "#FF423C", true); // 最顶层的皮带, 1
-			this.drawDashedLine(ctx, [[710, 16], [30, 16]]); // 从上往下第二个的皮带, 2
 
-			this.drawDashedLine(ctx, [[710, 120], [710, 7]], "#22AC38"); // 3,左
-			this.drawDashedLine(ctx, [[720, 120], [720, 7]], "#FF423C", true); // 4,右
+			//计算左上角犁煤器左侧的皮带所处的X轴的长度
+			this.drawDashedLine(ctx, [[this.lmqStartXOne, 7], [30, 7]], "#FF423C", false); //old:[710, 7], [30, 7] 左上角犁煤器左侧的皮带， 最顶层的皮带, 1
+			this.drawDashedLine(ctx, [[this.lmqStartXTwo, 16], [30, 16]], "#FF423C", false); //old:[710, 16], [30, 16] 左上角犁煤器左侧的皮带，从上往下第二个的皮带, 2
+
+			this.drawDashedLine(ctx, [[710, 7], [30, 7]], "#FF423C", true); // 最顶层的皮带, 1
+			this.drawDashedLine(ctx, [[710, 16], [30, 16]], "#FF423C", true); // 从上往下第二个的皮带, 2
+
+			this.drawDashedLine(ctx, [[710, 80], [710, 7]], "#22AC38"); //old:[710, 120], [710, 7] 3,左
+			this.drawDashedLine(ctx, [[720, 80], [720, 7]], "#FF423C", true); //old:[720, 120], [720, 7] 4,右
+
+			this.drawDashedLine(ctx, [[710, 120], [710, 80]], "#22AC38"); // old:[710, 120], [710, 7] 增加转运站多的皮带， 3,左
+			this.drawDashedLine(ctx, [[720, 120], [720, 80]], "#FF423C", true); // old:[720, 120], [720, 7]  增加转运站多的皮带，4,右
 
 			this.drawDashedLine(ctx, [[130, 124], [710, 124]], "#FF423C", true); // 5, 上
 			this.drawDashedLine(ctx, [[420, 132], [710, 132]], "#22AC38"); // 6， 下
 
-			this.drawDashedLine(ctx, [[135, 510], [135, 120]], "#FF423C", true); //7 左
-			this.drawDashedLine(ctx, [[425, 510], [425, 120]], "#22AC38"); //8 中
-			this.drawDashedLine(ctx, [[715, 510], [715, 120]], "#22AC38"); //9 右
+			//斗轮机上面的皮带
+			this.drawDashedLine(ctx, [[135, this.dljPositionYThree], [135, 120]], "#FF423C", true); //7 左
+			this.drawDashedLine(ctx, [[425, this.dljPositionYTwo], [425, 120]], "#22AC38"); //8 中
+			this.drawDashedLine(ctx, [[715, this.dljPositionYOne], [715, 120]], "#22AC38"); //9 右
+
+			//斗轮机下面的皮带
+			this.drawDashedLine(ctx, [[135, 510], [135, this.dljPositionYThree]], "#FF423C", true); //7 左
+			this.drawDashedLine(ctx, [[425, 510], [425, this.dljPositionYTwo]], "#22AC38", false); //8 中
+			this.drawDashedLine(ctx, [[715, 510], [715, this.dljPositionYOne]], "#22AC38", false); //9 右
 
 
 
@@ -504,6 +545,7 @@ export default {
 			});
 		},
 		handle_dlj(dlj) {
+			this.dlj = dlj;
 			if (!this.displayArm) {
 				this.displayArm = true;
 			}
