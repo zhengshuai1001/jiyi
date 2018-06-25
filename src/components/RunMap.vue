@@ -9,7 +9,7 @@
 				'display': displayArm ? 'block' : 'none',
 				'left': liftingArmImg[0].left + 'px',
 				'top': liftingArmImg[0].top + 'px',
-				'transform': 'rotateX(45deg) rotateZ('+liftingArmImg[0].rotation+'deg)',
+				'transform': 'rotateX(0) rotateZ('+liftingArmImg[0].rotation+'deg)',
 			}"></div>
 			<div 
 			class="lifting-arm-img" 
@@ -17,7 +17,7 @@
 				'display': displayArm ? 'block' : 'none',
 				'left': liftingArmImg[1].left + 'px',
 				'top': liftingArmImg[1].top + 'px',
-				'transform': 'rotateX(45deg) rotateZ('+liftingArmImg[1].rotation+'deg)',
+				'transform': 'rotateX(0) rotateZ('+liftingArmImg[1].rotation+'deg)',
 			}"></div>
 			<div 
 			class="lifting-arm-img" 
@@ -25,7 +25,7 @@
 				'display': displayArm ? 'block' : 'none',
 				'left': liftingArmImg[2].left + 'px',
 				'top': liftingArmImg[2].top + 'px',
-				'transform': 'rotateX(45deg) rotateZ('+liftingArmImg[2].rotation+'deg)',
+				'transform': 'rotateX(0) rotateZ('+liftingArmImg[2].rotation+'deg)',
 			}"></div>
 	</div>
 	</div>
@@ -36,7 +36,7 @@ import axios from "axios";
 
 let Ajax = axios.create({
   baseURL:'https://www.easy-mock.com/mock/5b2bc70743896129857dc8dc/jiyi',
-  timeout: 3000,
+  timeout: 5000,
   // headers: { 'Content-Type': 'application/json' },
   responseType: 'json',
 });
@@ -299,24 +299,57 @@ export default {
 			ctx.restore();
 		},
 		//画一个煤堆
-		drawCoalHeapOne(ctx, src, x, y, w, h ) {
+		drawCoalHeapOne(ctx, src, x, y, w, h, valueX, valueY, index ) {
 			let imageObj = new Image();
 			imageObj.src = src;
 			imageObj.onload = () => {
 				// ctx.save();
-				let yy = 170  + 320 - y * 1.2;
-				ctx.drawImage(imageObj, x, yy, w, h);
+				let width = imageObj.width;
+				let height = imageObj.height;
+				let webScale = 1.4;
+				// let yy = 140 + 360 + 65 - y * webScale;
+				let yy = 140 + 360 + 40 - y * webScale;
+				let ww;
+				if (width && height && valueX) {
+					let scale = (h/height).toFixed(3);
+					w = width*scale;
+					let eq = parseInt(index/4); //计算是哪部分的煤堆，煤堆分成三部分，从右至左，1,2,3
+					let beltX = [715, 425, 135]; //皮带的横坐标，也是煤堆定位的横坐标啦
+					ww = w*webScale;
+					if (valueX > 0) {
+						x = beltX[eq] + valueX*webScale - ww/2 + 10;
+					} else {
+						x = beltX[eq] + valueX*webScale - ww/2 - 20;
+					}
+				}
+				
+				ctx.drawImage(imageObj, x, yy, ww, h*webScale);
 				// ctx.restore();
 			};
 		},
+		// drawCoalHeapOne(ctx, src, x, y, w, h ) {
+		// 	let imageObj = new Image();
+		// 	imageObj.src = src;
+		// 	imageObj.onload = () => {
+		// 		// ctx.save();
+		// 		let width = imageObj.width;
+		// 		let height = imageObj.height;
+		// 		w = 80;
+		// 		let renderHeight = 80*height/width;
+		// 		let yy = 170  + 320 - y * 1.2;
+		// 		ctx.drawImage(imageObj, x, yy, w, renderHeight*1.2);
+		// 		// ctx.restore();
+		// 	};
+		// },
 		//画一个斗轮机
 		drawBucketWheelOne(ctx, x, end, rotation, status, index){
-			let y = 140 + 360 - (end * 1.2);
+			let y = 140 + 360 + 14 - (end * 1.2);
 			let imageObj = new Image();
 			imageObj.src = require("../assets/fuselage.png"); //斗轮机的机身部分
 			imageObj.onload = () => {
 				// ctx.save();
-				ctx.drawImage(imageObj, x, y, 15, 66);
+				// ctx.drawImage(imageObj, x, y, 15, 66);
+				ctx.drawImage(imageObj, x, y, 15, 56.7);
 				// ctx.restore();
 
 				//画斗轮机的吊臂
@@ -330,8 +363,10 @@ export default {
 			// 	top: y,
 			// 	rotation,
 			// }
-			this.liftingArmImg[index].left = x;
+			this.liftingArmImg[index].left = x - 3;
+			// this.liftingArmImg[index].left = x;
 			this.liftingArmImg[index].top = y - 40 - 16;
+			this.liftingArmImg[index].top = y - 55 - 16;
 			// this.liftingArmImg[index].top = y - 40 - 30;
 			this.liftingArmImg[index].rotation = rotation;
 		},
@@ -400,7 +435,7 @@ export default {
 			imageObj.src = require("../assets/shipUnloaderLong.png");
 			imageObj.onload = () => {
 				// ctx.save();
-				ctx.drawImage(imageObj, 160, 550, 43, 89);
+				ctx.drawImage(imageObj, 180, 550, 43, 89);
 				// ctx.restore();
 			};
 		},
@@ -410,7 +445,7 @@ export default {
 			imageObj.src = require("../assets/shipUnloaderShort.png");
 			imageObj.onload = () => {
 				// ctx.save();
-				ctx.drawImage(imageObj, 230, 550, 43, 69);
+				ctx.drawImage(imageObj, 270, 550, 43, 69);
 				// ctx.restore();
 			};
 		},
@@ -420,11 +455,36 @@ export default {
 			imageObj.src = require("../assets/ship.png");
 			imageObj.onload = () => {
 				// ctx.save();
-				ctx.drawImage(imageObj, 150, 615, 178, 31);
+				ctx.drawImage(imageObj, 160, 615, 178, 31);
 				// ctx.restore();
 				this.drawShipUnloaderLong(ctx);
 				this.drawShipUnloaderShort(ctx);
 				//等船绘制完成后再去绘制卸船机
+			};
+			this.drawShipTwo(this.ctx);
+		},
+		//画第二艘船
+		drawShipTwo(ctx) {
+			let imageObj = new Image();
+			imageObj.src = require("../assets/ship.png");
+			imageObj.onload = () => {
+				// ctx.save();
+				ctx.drawImage(imageObj, 420, 615, 178, 31);
+				// ctx.restore();
+				this.drawShipUnloaderLong(ctx);
+				this.drawShipUnloaderShort(ctx);
+				//等船绘制完成后再去绘制卸船机
+			};
+			this.drawShipUnloaderShortTwo(this.ctx)
+		},
+		//画卸船机, 短的,第二条船上的
+		drawShipUnloaderShortTwo(ctx) {
+			let imageObj = new Image();
+			imageObj.src = require("../assets/shipUnloaderShort.png");
+			imageObj.onload = () => {
+				// ctx.save();
+				ctx.drawImage(imageObj, 450, 550, 43, 69);
+				// ctx.restore();
 			};
 		},
 		//画皮带，重头戏
@@ -573,7 +633,7 @@ export default {
 				if (md.hasOwnProperty(i)) {
 					const value = md[i];
 					// this.drawCoalHeapOne(this.ctx, "./pic/" + value.url, x[index], 170, 100, value.end - value.start );
-					this.drawCoalHeapOne(this.ctx, require("../assets/pic/" + value.url), x[index], value.end, 100, value.end - value.start );
+					this.drawCoalHeapOne(this.ctx, require("../assets/pic/" + value.url), x[index], value.end, 100, value.end - value.start, value.x, value.y, index );
 					index++;
 				}
 			}
