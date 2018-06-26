@@ -204,7 +204,7 @@
                   <p>神混</p>
                 </div>
               </Row>
-              <canvas class="canvas-belt" id="canvas-lower" width="385" height="70"></canvas>
+              <canvas class="canvas-belt" id="canvas-lower" width="385" height="100"></canvas>
             </Col>
           </Row>
           </Col>
@@ -263,6 +263,9 @@ export default {
       pointsA: [ [30, 40], [30, 60], [320, 60], [320, 10], [385, 10] ], //A煤仓的线条连接点
       pointsB: [ [150, 40], [150, 60], [320, 60], [320, 10], [385, 10] ], //B煤仓的线条连接点
       pointsC: [ [270, 40], [270, 60], [320, 60], [320, 10], [385, 10] ], //C煤仓的线条连接点
+      pointsD: [ [30, 70], [30, 90], [320, 90], [320, 10], [385, 10] ], //D煤仓的线条连接点
+      pointsE: [ [150, 70], [150, 90], [320, 90], [320, 10], [385, 10] ], //E煤仓的线条连接点
+      pointsF: [ [270, 70], [270, 90], [320, 90], [320, 10], [385, 10] ], //F煤仓的线条连接点
       // clearRectAVertical: [], //A煤仓运转时虚线运动范围, 垂直区域，这个值实质是canvas在指定区域，擦除之前绘制的所有内容的方法。四个值分别为起点的 x 轴坐标，起点的 y 轴坐标，矩形的宽度和高度
       // clearRectALevel: [],  //水平区域
       // clearRectBVertical: [], //垂直区域
@@ -273,12 +276,15 @@ export default {
       clearRectA: [ [28,40, 4, 20], [28,58, 293, 4], [318,0, 385, 60] ],
       clearRectB: [ [148,40, 4, 20], [148,58, 173, 4], [318,0, 385, 60] ],
       clearRectC: [ [268,40, 4, 20], [268,58, 53, 4], [318,0, 385, 60] ],
+      clearRectD: [ [28,70, 4, 20], [28,88, 293, 4], [318,0, 385, 90] ],
+      clearRectE: [ [148,70, 4, 20], [148,88, 173, 4], [318,0, 385, 90] ],
+      clearRectF: [ [268,70, 4, 20], [268,88, 53, 4], [318,0, 385, 90] ],
       isWorkingA: true, //A煤仓的状态，是否在运动
       isWorkingB: false,
       isWorkingC: false,
-      isWorkingD: true,
-      isWorkingE: false,
-      isWorkingF: false,
+      isWorkingD: false,
+      isWorkingE: true,
+      isWorkingF: true,
     };
   },
   beforeMount() {
@@ -355,9 +361,9 @@ export default {
       this.drawDashedLine(this.ctx, this.pointsB, this.isWorkingB ? this.clearRectB : null);
       this.drawDashedLine(this.ctx, this.pointsC, this.isWorkingC ? this.clearRectC : null);
 
-      this.drawDashedLine(this.ctx2, this.pointsA, this.isWorkingD ? this.clearRectA : null);
-      this.drawDashedLine(this.ctx2, this.pointsB, this.isWorkingE ? this.clearRectB : null);
-      this.drawDashedLine(this.ctx2, this.pointsC, this.isWorkingF ? this.clearRectC : null);
+      this.drawDashedLine(this.ctx2, this.pointsD, this.isWorkingD ? this.clearRectD : null);
+      this.drawDashedLine(this.ctx2, this.pointsE, this.isWorkingE ? this.clearRectE : null);
+      this.drawDashedLine(this.ctx2, this.pointsF, this.isWorkingF ? this.clearRectF : null);
     },
     animation() {
       cancelAnimationFrame(this.animationTimer);
