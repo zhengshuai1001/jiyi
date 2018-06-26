@@ -496,7 +496,7 @@ export default {
 			this.drawDashedLine(ctx, [[this.lmqStartXTwo, 16], [30, 16]], "#FF423C", false); //old:[710, 16], [30, 16] 左上角犁煤器左侧的皮带，从上往下第二个的皮带, 2
 
 			this.drawDashedLine(ctx, [[710, 7], [30, 7]], "#FF423C", true); // 最顶层的皮带, 1
-			this.drawDashedLine(ctx, [[710, 16], [30, 16]], "#FF423C", true); // 从上往下第二个的皮带, 2
+			this.drawDashedLine(ctx, [[710, 16], [30, 16]], "#FF423C", false); // 从上往下第二个的皮带, 2
 
 			this.drawDashedLine(ctx, [[710, 80], [710, 7]], "#22AC38"); //old:[710, 120], [710, 7] 3,左
 			this.drawDashedLine(ctx, [[720, 80], [720, 7]], "#FF423C", true); //old:[720, 120], [720, 7] 4,右
