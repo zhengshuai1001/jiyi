@@ -84,6 +84,7 @@ export default {
 				{"position":61,"rotation":22.85,"status":0},
 				{"position":221.8,"rotation":47,"status":1}
 			],
+			mc: [], //煤仓
 		}
 	},
 	computed: {
@@ -218,7 +219,7 @@ export default {
 							break;
 					}
 					let mcIndex = i * 6 + j + 1; //煤仓索引
-					this.drawCoalBunkerOne(this.ctx, startX, starty, [], fontText, "#78a8e8", i, mcIndex);
+					this.drawCoalBunkerOne(this.ctx, startX, starty, this.mc[mcIndex-1], fontText, "#78a8e8", i, mcIndex);
 					// startX -= 24;
 					startX -= 23; //缩短间距
 				}
@@ -229,33 +230,74 @@ export default {
 		},
 		//画一个煤仓
 		drawCoalBunkerOne(ctx, x, y, mcArray = [], fontText, fontColor, outerIndex, mcIndex) {
-
+			// console.log(mcArray)
 			ctx.save();
 			ctx.translate(x, y);
 			ctx.beginPath();
 			ctx.fillStyle = '#FFFFFF';
+			// ctx.moveTo(1, 1); 
+			// ctx.lineTo(18, 1);
+			// ctx.lineTo(18, 21); 
+			// ctx.lineTo(10, 40);
+			// ctx.lineTo(1, 21);
+			// ctx.closePath();
+
+			//07/30更新数据 start
 			ctx.moveTo(1, 1); 
 			ctx.lineTo(18, 1);
 			ctx.lineTo(18, 21); 
-			ctx.lineTo(10, 40);
-			ctx.lineTo(1, 21);
+			ctx.lineTo(14, 31);
+			ctx.lineTo(6, 31);
+			ctx.lineTo(1, 20);
 			ctx.closePath();
+			//07/30更新数据 end
+
 			ctx.fill();
 
 			ctx.globalCompositeOperation = 'source-atop';
 
 			// mcArray.map((value, index)=>{
-				ctx.beginPath();
-				ctx.fillStyle='#78a8e8';
-				ctx.fillRect(1,10,17,15);
-				ctx.closePath();
+			// 	ctx.save();
+			// 	ctx.beginPath();
+			// 	let height = 40 - parseInt(value.height) * 5 / 2;
+			// 	ctx.fillStyle = value.color;
+			// 	ctx.fillRect(1,height,17,15);
+			// 	ctx.closePath();
+			// 	ctx.restore();
 			// })
+			for (let i = 0; i < mcArray.length; i++) {
+				// const value = mcArray[i];
+				// ctx.beginPath();
+				// let height = 40 - parseInt(value.height) * 5 / 2;
+				// ctx.fillStyle = value.color;
+				// ctx.fillRect(1,height,17,15);
+				// ctx.closePath();
+			}
+
+
+			// ctx.beginPath();
+			// ctx.fillStyle='#e86e6b';
+			// ctx.fillRect(1,25,17,15);
+			// ctx.closePath();
+
+			//07/30更新数据 start
+			// let heightOne = 40 - mcArray[0].height * 5 / 2;
+			// let heightTwo = 40 - mcArray[1].height * 5 / 2;
+			let heightOne = 40 - mcArray[0].height * 2 - 8;
+			let heightTwo = 40 - mcArray[1].height * 2 - 8;
+
+			ctx.beginPath();
+			ctx.fillStyle = mcArray[0].color;
+			ctx.fillRect(1,heightOne,17,40);
+			ctx.closePath();
 
 
 			ctx.beginPath();
-			ctx.fillStyle='#e86e6b';
-			ctx.fillRect(1,25,17,15);
+			ctx.fillStyle = mcArray[1].color;
+			ctx.fillRect(1,heightTwo,17,40);
 			ctx.closePath();
+			//07/30更新数据 end
+
 
 			ctx.restore();
 
@@ -265,12 +307,22 @@ export default {
 			ctx.beginPath();
 			ctx.strokeStyle = "#2070c2"; 
 			ctx.lineWidth = 1;
+			// ctx.moveTo(1, 0); 
+			// ctx.lineTo(18, 0);
+			// ctx.lineTo(18, 20); 
+			// ctx.lineTo(10, 41);
+			// ctx.lineTo(1, 20);
+			// ctx.closePath();
+
+			//07/30更新数据 start
 			ctx.moveTo(1, 0); 
 			ctx.lineTo(18, 0);
 			ctx.lineTo(18, 20); 
-			ctx.lineTo(10, 41);
+			ctx.lineTo(14, 31);
+			ctx.lineTo(6, 31);
 			ctx.lineTo(1, 20);
 			ctx.closePath();
+			//07/30更新数据 end
 
 			//渲染煤仓下的文字,煤仓编号
 			ctx.font = '16px Arial';
@@ -617,7 +669,7 @@ export default {
 			// console.log(pd);
 		},
 		handle_mc(mc) {
-			// console.log(mc);
+			this.mc = mc;
 
 		},
 		handle_lmq(lmq) {
