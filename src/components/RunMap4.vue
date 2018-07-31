@@ -2,7 +2,8 @@
 	<!-- <div class="run-map-page" :style="{ position: 'relative' , 'transform': 'scale(' + unitPageScale +')', top: unitPageScaleTop + 'px' }"> -->
 	<!-- <div class="run-map-page" :style="{ position: 'relative' , zoom: unitPageScale }"> -->
 	<div class="run-map-page">
-	<div class="canvas-box":style="{ zoom: unitPageScale }">
+	<!-- <div class="canvas-box":style="{ zoom: unitPageScale }"> -->
+	<div class="canvas-box":style="{ zoom: 1.2 }">
 		<canvas id="myCanvasBelt" width="850" height="650"></canvas>
 		<canvas id="myCanvas" width="850" height="720"></canvas>
 		<div 
@@ -147,14 +148,14 @@ export default {
 
 		this.ctx = document.getElementById("myCanvas").getContext("2d");
 		this.ctxBelt = document.getElementById("myCanvasBelt").getContext("2d");
-		this.drawRoundedRect(this.ctx, 30, 140, 97, 360, 60, 20, true, false, 2, "#595959", "#959595");
-		this.drawRoundedRect(this.ctx, 143, 140, 97, 360, 20, 20, true, false, 2, "#595959", "#959595");
+		this.drawRoundedRect(this.ctx, 30, 160, 97, 360, 60, 20, true, false, 2, "#595959", "#959595");
+		this.drawRoundedRect(this.ctx, 143, 160, 97, 360, 20, 20, true, false, 2, "#595959", "#959595");
 
-		this.drawRoundedRect(this.ctx, 320, 140, 95, 358, 20, 20, true, true, 2, "#595959", "#959595");
-		this.drawRoundedRect(this.ctx, 433, 140, 95, 358, 20, 20, true, true, 2, "#595959", "#959595");
+		this.drawRoundedRect(this.ctx, 320, 160, 95, 358, 20, 20, true, true, 2, "#595959", "#959595");
+		this.drawRoundedRect(this.ctx, 433, 160, 95, 358, 20, 20, true, true, 2, "#595959", "#959595");
 
-		this.drawRoundedRect(this.ctx, 610, 140, 97, 360, 20, 20, true, false, 2, "#595959", "#959595");
-		this.drawRoundedRect(this.ctx, 723, 140, 97, 360, 20, 60, true, false, 2, "#595959", "#959595");
+		this.drawRoundedRect(this.ctx, 610, 160, 97, 360, 20, 20, true, false, 2, "#595959", "#959595");
+		this.drawRoundedRect(this.ctx, 723, 160, 97, 360, 20, 60, true, false, 2, "#595959", "#959595");
 
 		//绘画煤仓
 		// this.drawCoalBunker();
@@ -395,7 +396,7 @@ export default {
 				let height = imageObj.height;
 				let webScale = 1.4;
 				// let yy = 140 + 360 + 65 - y * webScale;
-				let yy = 140 + 360 + 40 - y * webScale;
+				let yy = 160 + 360 + 40 - y * webScale;
 				let ww;
 				if (width && height && valueX) {
 					let scale = (h/height).toFixed(3);
@@ -430,7 +431,7 @@ export default {
 		// },
 		//画一个斗轮机
 		drawBucketWheelOne(ctx, x, end, rotation, status, index){
-			let y = 140 + 360 + 14 - (end * 1.2);
+			let y = 160 + 360 + 14 - (end * 1.2);
 			let imageObj = new Image();
 			imageObj.src = require("../assets/fuselage.png"); //斗轮机的机身部分
 			imageObj.onload = () => {
@@ -469,19 +470,19 @@ export default {
 		},
 		//画所有的转运站
 		drawTransferStationAll(){
-			this.drawTransferStationOne(this.ctx, 120, 120); //-23
-			this.drawTransferStationOne(this.ctx, 410, 120);
-			this.drawTransferStationOne(this.ctx, 700, 120);
+			this.drawTransferStationOne(this.ctx, 120, 140); //-23
+			this.drawTransferStationOne(this.ctx, 410, 140);
+			this.drawTransferStationOne(this.ctx, 700, 140);
 			this.drawTransferStationOne(this.ctx, 700, 80); //增加一个转运站
 			this.drawTransferStationOne(this.ctx, 700, 3);
 
-			this.drawTransferStationOne(this.ctx, 120, 510); //-23
-			this.drawTransferStationOne(this.ctx, 410, 510);
-			this.drawTransferStationOne(this.ctx, 700, 510);
+			this.drawTransferStationOne(this.ctx, 120, 530); //-23
+			this.drawTransferStationOne(this.ctx, 410, 530);
+			this.drawTransferStationOne(this.ctx, 700, 530);
 
-			this.drawTransferStationOne(this.ctx, 700, 533);
+			this.drawTransferStationOne(this.ctx, 700, 583);
 
-			this.drawTransferStationOne(this.ctx, 120, 560);
+			this.drawTransferStationOne(this.ctx, 120, 630);
 
 			//画一个皮带的终点
 			this.drawBeltEnd(this.ctx);
@@ -522,7 +523,7 @@ export default {
 			imageObj.src = require("../assets/shipUnloaderLong.png");
 			imageObj.onload = () => {
 				// ctx.save();
-				ctx.drawImage(imageObj, 180, 550, 43, 89);
+				ctx.drawImage(imageObj, 180, 620, 43, 89);
 				// ctx.restore();
 			};
 		},
@@ -532,7 +533,7 @@ export default {
 			imageObj.src = require("../assets/shipUnloaderShort.png");
 			imageObj.onload = () => {
 				// ctx.save();
-				ctx.drawImage(imageObj, 270, 550, 43, 69);
+				ctx.drawImage(imageObj, 270, 620, 43, 69);
 				// ctx.restore();
 			};
 		},
@@ -542,7 +543,7 @@ export default {
 			imageObj.src = require("../assets/ship.png");
 			imageObj.onload = () => {
 				// ctx.save();
-				ctx.drawImage(imageObj, 160, 615, 178, 31);
+				ctx.drawImage(imageObj, 160, 685, 178, 31);
 				// ctx.restore();
 				this.drawShipUnloaderLong(ctx);
 				this.drawShipUnloaderShort(ctx);
@@ -556,7 +557,7 @@ export default {
 			imageObj.src = require("../assets/ship.png");
 			imageObj.onload = () => {
 				// ctx.save();
-				ctx.drawImage(imageObj, 420, 615, 178, 31);
+				ctx.drawImage(imageObj, 420, 685, 178, 31);
 				// ctx.restore();
 				this.drawShipUnloaderLong(ctx);
 				this.drawShipUnloaderShort(ctx);
@@ -570,7 +571,7 @@ export default {
 			imageObj.src = require("../assets/shipUnloaderShort.png");
 			imageObj.onload = () => {
 				// ctx.save();
-				ctx.drawImage(imageObj, 450, 550, 43, 69);
+				ctx.drawImage(imageObj, 450, 620, 43, 69);
 				// ctx.restore();
 			};
 		},
@@ -586,43 +587,43 @@ export default {
 			this.drawDashedLine(ctx, [[this.lmqStartXTwo, 16], [65, 16]], "#FF423C", false); //11b2 old:[710, 16], [30, 16] 左上角犁煤器左侧的皮带，从上往下第二个的皮带, 2
 
 
-			this.drawDashedLine(ctx, [[710, 80], [710, 7]], "#22AC38"); //10b old:[710, 120], [710, 7] 3,左 绿色
-			this.drawDashedLine(ctx, [[720, 80], [720, 7]], "#FF423C", true); //10a  old:[720, 120], [720, 7] 4,右 红色
+			this.drawDashedLine(ctx, [[710, 100], [710, 7]], "#22AC38"); //10b old:[710, 120], [710, 7] 3,左 绿色
+			this.drawDashedLine(ctx, [[720, 100], [720, 7]], "#FF423C", true); //10a  old:[720, 120], [720, 7] 4,右 红色
 
-			this.drawDashedLine(ctx, [[710, 120], [710, 80]], "#22AC38"); //9b old:[710, 120], [710, 7] 增加转运站多的皮带， 3,左
-			this.drawDashedLine(ctx, [[720, 120], [720, 80]], "#FF423C", true); //9a  old:[720, 120], [720, 7]  增加转运站多的皮带，4,右
+			this.drawDashedLine(ctx, [[710, 140], [710, 90]], "#22AC38"); //9b old:[710, 120], [710, 7] 增加转运站多的皮带， 3,左
+			this.drawDashedLine(ctx, [[720, 140], [720, 90]], "#FF423C", true); //9a  old:[720, 120], [720, 7]  增加转运站多的皮带，4,右
 
-			this.drawDashedLine(ctx, [[130, 124], [420, 124]], "#FF423C", true); //7    5, 上
-			this.drawDashedLine(ctx, [[420, 124], [710, 124]], "#FF423C", true); //8b   5, 上
-			this.drawDashedLine(ctx, [[420, 132], [710, 132]], "#22AC38"); //8a    6， 下
+			this.drawDashedLine(ctx, [[130, 144], [420, 144]], "#FF423C", true); //7    5, 上
+			this.drawDashedLine(ctx, [[420, 144], [710, 144]], "#FF423C", true); //8b   5, 上
+			this.drawDashedLine(ctx, [[420, 152], [710, 152]], "#22AC38"); //8a    6， 下
 
 			//斗轮机上面的皮带
-			this.drawDashedLine(ctx, [[135, this.dljPositionYThree], [135, 120]], "#FF423C", true); //6c2   7 左
-			this.drawDashedLine(ctx, [[425, this.dljPositionYTwo], [425, 120]], "#22AC38"); //6b2           8 中
-			this.drawDashedLine(ctx, [[715, this.dljPositionYOne], [715, 120]], "#22AC38"); //6a2           9 右
+			this.drawDashedLine(ctx, [[135, this.dljPositionYThree], [135, 140]], "#FF423C", true); //6c2   7 左
+			this.drawDashedLine(ctx, [[425, this.dljPositionYTwo], [425, 140]], "#22AC38"); //6b2           8 中
+			this.drawDashedLine(ctx, [[715, this.dljPositionYOne], [715, 140]], "#22AC38"); //6a2           9 右
 
 			//斗轮机下面的皮带
-			this.drawDashedLine(ctx, [[135, 510], [135, this.dljPositionYThree]], "#FF423C", true); //6c1           7 左
-			this.drawDashedLine(ctx, [[425, 510], [425, this.dljPositionYTwo]], "#22AC38", false); //6b1           8 中
-			this.drawDashedLine(ctx, [[715, 510], [715, this.dljPositionYOne]], "#22AC38", false); //6a1           9 右
+			this.drawDashedLine(ctx, [[135, 530], [135, this.dljPositionYThree]], "#FF423C", true); //6c1           7 左
+			this.drawDashedLine(ctx, [[425, 530], [425, this.dljPositionYTwo]], "#22AC38", false); //6b1           8 中
+			this.drawDashedLine(ctx, [[715, 530], [715, this.dljPositionYOne]], "#22AC38", false); //6a1           9 右
 
 
 
-      this.drawDashedLine(ctx, [[710, 514], [425, 514]], "#FF423C", true); //4a          5, 上
-      this.drawDashedLine(ctx, [[425, 514], [130, 514]], "#FF423C", true); //5a           5, 上
+      this.drawDashedLine(ctx, [[710, 534], [425, 534]], "#FF423C", true); //4a          5, 上
+      this.drawDashedLine(ctx, [[425, 534], [130, 534]], "#FF423C", true); //5a           5, 上
 
-			this.drawDashedLine(ctx, [[710, 522], [425, 522]], "#22AC38", false); //4b                 6， 下
-			this.drawDashedLine(ctx, [[425, 522], [130, 522]], "#22AC38"); //5b                 6， 下
+			this.drawDashedLine(ctx, [[710, 542], [425, 542]], "#22AC38", false); //4b                 6， 下
+			this.drawDashedLine(ctx, [[425, 542], [130, 542]], "#22AC38"); //5b                 6， 下
 
 
-			this.drawDashedLine(ctx, [[710, 545], [710, 522]], "#22AC38",false); //3b                 3,左
-			this.drawDashedLine(ctx, [[720, 545], [720, 522]], "#FF423C", true); //3a           4,右
+			this.drawDashedLine(ctx, [[710, 595], [710, 542]], "#22AC38",false); //3b                 3,左
+			this.drawDashedLine(ctx, [[720, 595], [720, 542]], "#FF423C", true); //3a           4,右
 
-			this.drawDashedLine(ctx, [[130, 570], [130, 537], [710, 537]], "#22AC38", false); //2b                5, 上
-			this.drawDashedLine(ctx, [[138, 570], [138, 545], [710, 545]], "#FF423C", true); //2a          6， 下
+			this.drawDashedLine(ctx, [[130, 630], [130, 587], [710, 587]], "#22AC38", false); //2b                5, 上
+			this.drawDashedLine(ctx, [[138, 630], [138, 595], [710, 595]], "#FF423C", true); //2a          6， 下
 
-			this.drawDashedLine(ctx, [[710, 564], [130, 564]], "#FF423C", true); //1a                      5, 上
-			this.drawDashedLine(ctx, [[710, 572], [130, 572]], "#22AC38", false); //1b                            6， 下
+			this.drawDashedLine(ctx, [[710, 634], [130, 634]], "#FF423C", true); //1a                      5, 上
+			this.drawDashedLine(ctx, [[710, 642], [130, 642]], "#22AC38", false); //1b                            6， 下
 		},
 		// 画一条皮带
 		// 绘制虚线或实线

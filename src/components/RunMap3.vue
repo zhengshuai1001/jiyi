@@ -147,14 +147,14 @@ export default {
 
 		this.ctx = document.getElementById("myCanvas").getContext("2d");
 		this.ctxBelt = document.getElementById("myCanvasBelt").getContext("2d");
-		this.drawRoundedRect(this.ctx, 30, 140, 97, 360, 60, 20, true, false, 2, "#595959", "#959595");
-		this.drawRoundedRect(this.ctx, 143, 140, 97, 360, 20, 20, true, false, 2, "#595959", "#959595");
+		this.drawRoundedRect(this.ctx, 30, 140, 97, 380, 60, 20, true, false, 2, "#595959", "#fff");
+		this.drawRoundedRect(this.ctx, 143, 140, 97, 380, 20, 20, true, false, 2, "#595959", "#fff"); //#959595
 
-		this.drawRoundedRect(this.ctx, 320, 140, 95, 358, 20, 20, true, true, 2, "#595959", "#959595");
-		this.drawRoundedRect(this.ctx, 433, 140, 95, 358, 20, 20, true, true, 2, "#595959", "#959595");
+		this.drawRoundedRect(this.ctx, 320, 140, 95, 378, 20, 20, true, true, 2, "#595959", "#fff");
+		this.drawRoundedRect(this.ctx, 433, 140, 95, 378, 20, 20, true, true, 2, "#595959", "#fff");
 
-		this.drawRoundedRect(this.ctx, 610, 140, 97, 360, 20, 20, true, false, 2, "#595959", "#959595");
-		this.drawRoundedRect(this.ctx, 723, 140, 97, 360, 20, 60, true, false, 2, "#595959", "#959595");
+		this.drawRoundedRect(this.ctx, 610, 140, 97, 380, 20, 20, true, false, 2, "#595959", "#fff");
+		this.drawRoundedRect(this.ctx, 723, 140, 97, 380, 20, 60, true, false, 2, "#595959", "#fff");
 
 		//绘画煤仓
 		// this.drawCoalBunker();
@@ -387,32 +387,82 @@ export default {
 		},
 		//画一个煤堆
 		drawCoalHeapOne(ctx, src, x, y, w, h, valueX, valueY, index ) {
-			let imageObj = new Image();
-			imageObj.src = src;
-			imageObj.onload = () => {
-				// ctx.save();
-				let width = imageObj.width;
-				let height = imageObj.height;
-				let webScale = 1.4;
-				// let yy = 140 + 360 + 65 - y * webScale;
-				let yy = 140 + 360 + 40 - y * webScale;
-				let ww;
-				if (width && height && valueX) {
-					let scale = (h/height).toFixed(3);
-					w = width*scale;
-					let eq = parseInt(index/4); //计算是哪部分的煤堆，煤堆分成三部分，从右至左，1,2,3
-					let beltX = [715, 425, 135]; //皮带的横坐标，也是煤堆定位的横坐标啦
-					ww = w*webScale;
-					if (valueX > 0) {
-						x = beltX[eq] + valueX*webScale - ww/2 + 10;
-					} else {
-						x = beltX[eq] + valueX*webScale - ww/2 - 20;
-					}
-				}
+			// let imageObj = new Image();
+			// imageObj.src = src;
+			// imageObj.onload = (e) => {
+      //   // console.log(e.target.naturalWidth)
+      //   // console.log(imageObj.width)
+			// 	// ctx.save();
+			// 	let width = imageObj.width;
+			// 	let height = imageObj.height;
+			// 	let webScale = 1.4;
+			// 	// let yy = 140 + 360 + 65 - y * webScale;
+			// 	let yy = 140 + 360 + 40 - y * webScale;
+			// 	let ww;
+			// 	if (width && height && valueX) {
+			// 		let scale = (h/height).toFixed(3);
+			// 		w = width*scale;
+			// 		let eq = parseInt(index/4); //计算是哪部分的煤堆，煤堆分成三部分，从右至左，1,2,3
+			// 		let beltX = [715, 425, 135]; //皮带的横坐标，也是煤堆定位的横坐标啦
+			// 		ww = w*webScale;
+			// 		if (valueX > 0) {
+			// 			x = beltX[eq] + valueX*webScale - ww/2 + 10;
+			// 		} else {
+			// 			x = beltX[eq] + valueX*webScale - ww/2 - 20;
+			// 		}
+			// 	}
 				
-				ctx.drawImage(imageObj, x, yy, ww, h*webScale);
-				// ctx.restore();
-			};
+			// 	ctx.drawImage(imageObj, x, yy, ww, h*webScale);
+			// 	// ctx.restore();
+      // };
+      
+      //0731更新
+      // let imageObj2 = new Image();
+      // imageObj2.src = src;
+      // imageObj2.onload = (e) => {
+      //   let width = imageObj2.width; //图片的宽度
+      //   let height = imageObj2.height; //图片的宽度
+      //   let webScale = 38/30; //1.2666666666 网页像素和实际距离(米)的缩放比
+      //   if (width && height && valueX) {
+      //     let realHeight = h;  //煤堆实际高度
+      //     let realWidth = width * realHeight / height; //煤堆的实际宽度
+      //     let eq = parseInt(index/4); //计算是哪部分的煤堆，煤堆分成三部分，从右至左，1,2,3
+      //     let beltX = [715, 425, 135]; //皮带的横坐标，也是煤堆定位的横坐标啦
+      //     let positionX; //canvas定位X坐标
+      //     let positionY; //canvas定位Y坐标
+      //     positionY = 140 + 380 - (valueY + realHeight/2) * webScale;
+      //     if (valueX > 0) {
+      //       positionX = beltX[eq] + ( valueX + 5 -  realWidth/2)*webScale;
+      //     } else {
+      //       positionX = beltX[eq] + ( valueX - 5 -  realWidth/2)*webScale;
+      //     }
+      //     ctx.drawImage(imageObj2, positionX, positionY, realWidth*webScale, realHeight*webScale);
+      //   }
+      // }
+
+      //0731 第二次更新
+      let imageObj3 = new Image();
+      imageObj3.src = src;
+      imageObj3.onload = (e) => {
+        let width = imageObj3.width; //图片的宽度
+        let height = imageObj3.height; //图片的宽度
+        let showWidth = 75; //图片显示宽度
+        let showHeight = showWidth * height / width; //图片显示高度
+        let webScale = 38/30; //1.2666666666 网页像素和实际距离(米)的缩放比
+        if (width && height && valueX) {
+          let eq = parseInt(index/4); //计算是哪部分的煤堆，煤堆分成三部分，从右至左，1,2,3
+          let beltX = [715, 425, 135]; //皮带的横坐标，也是煤堆定位的横坐标啦
+          let positionX; //canvas定位X坐标
+          let positionY; //canvas定位Y坐标
+          if (valueX > 0) {
+            positionX = beltX[eq] + ( valueX + 20 ) * webScale - showWidth/2;
+          } else {
+            positionX = beltX[eq] + ( valueX - 20 ) * webScale - showWidth/2;
+          }
+          positionY = 140 + 380 - valueY * webScale - showHeight/2;
+          ctx.drawImage(imageObj3, positionX, positionY, showWidth, showHeight);
+        }
+      }
 		},
 		// drawCoalHeapOne(ctx, src, x, y, w, h ) {
 		// 	let imageObj = new Image();
@@ -475,13 +525,13 @@ export default {
 			this.drawTransferStationOne(this.ctx, 700, 80); //增加一个转运站
 			this.drawTransferStationOne(this.ctx, 700, 3);
 
-			this.drawTransferStationOne(this.ctx, 120, 510); //-23
-			this.drawTransferStationOne(this.ctx, 410, 510);
-			this.drawTransferStationOne(this.ctx, 700, 510);
+			this.drawTransferStationOne(this.ctx, 120, 530); //-23
+			this.drawTransferStationOne(this.ctx, 410, 530);
+			this.drawTransferStationOne(this.ctx, 700, 530);
 
-			this.drawTransferStationOne(this.ctx, 700, 533);
+			this.drawTransferStationOne(this.ctx, 700, 553);
 
-			this.drawTransferStationOne(this.ctx, 120, 560);
+			this.drawTransferStationOne(this.ctx, 120, 580);
 
 			//画一个皮带的终点
 			this.drawBeltEnd(this.ctx);
@@ -522,7 +572,7 @@ export default {
 			imageObj.src = require("../assets/shipUnloaderLong.png");
 			imageObj.onload = () => {
 				// ctx.save();
-				ctx.drawImage(imageObj, 180, 550, 43, 89);
+				ctx.drawImage(imageObj, 180, 570, 43, 89);
 				// ctx.restore();
 			};
 		},
@@ -532,7 +582,7 @@ export default {
 			imageObj.src = require("../assets/shipUnloaderShort.png");
 			imageObj.onload = () => {
 				// ctx.save();
-				ctx.drawImage(imageObj, 270, 550, 43, 69);
+				ctx.drawImage(imageObj, 270, 570, 43, 69);
 				// ctx.restore();
 			};
 		},
@@ -542,7 +592,7 @@ export default {
 			imageObj.src = require("../assets/ship.png");
 			imageObj.onload = () => {
 				// ctx.save();
-				ctx.drawImage(imageObj, 160, 615, 178, 31);
+				ctx.drawImage(imageObj, 160, 635, 178, 31);
 				// ctx.restore();
 				this.drawShipUnloaderLong(ctx);
 				this.drawShipUnloaderShort(ctx);
@@ -556,7 +606,7 @@ export default {
 			imageObj.src = require("../assets/ship.png");
 			imageObj.onload = () => {
 				// ctx.save();
-				ctx.drawImage(imageObj, 420, 615, 178, 31);
+				ctx.drawImage(imageObj, 420, 635, 178, 31);
 				// ctx.restore();
 				this.drawShipUnloaderLong(ctx);
 				this.drawShipUnloaderShort(ctx);
@@ -570,7 +620,7 @@ export default {
 			imageObj.src = require("../assets/shipUnloaderShort.png");
 			imageObj.onload = () => {
 				// ctx.save();
-				ctx.drawImage(imageObj, 450, 550, 43, 69);
+				ctx.drawImage(imageObj, 450, 570, 43, 69);
 				// ctx.restore();
 			};
 		},
@@ -602,27 +652,27 @@ export default {
 			this.drawDashedLine(ctx, [[715, this.dljPositionYOne], [715, 120]], "#22AC38"); //6a2           9 右
 
 			//斗轮机下面的皮带
-			this.drawDashedLine(ctx, [[135, 510], [135, this.dljPositionYThree]], "#FF423C", true); //6c1           7 左
-			this.drawDashedLine(ctx, [[425, 510], [425, this.dljPositionYTwo]], "#22AC38", false); //6b1           8 中
-			this.drawDashedLine(ctx, [[715, 510], [715, this.dljPositionYOne]], "#22AC38", false); //6a1           9 右
+			this.drawDashedLine(ctx, [[135, 530], [135, this.dljPositionYThree]], "#FF423C", true); //6c1           7 左
+			this.drawDashedLine(ctx, [[425, 530], [425, this.dljPositionYTwo]], "#22AC38", false); //6b1           8 中
+			this.drawDashedLine(ctx, [[715, 530], [715, this.dljPositionYOne]], "#22AC38", false); //6a1           9 右
 
 
+      //以下为页面底部横向的皮带
+      this.drawDashedLine(ctx, [[710, 534], [425, 534]], "#FF423C", true); //4a          5, 上
+      this.drawDashedLine(ctx, [[425, 534], [130, 534]], "#FF423C", true); //5a           5, 上
 
-      this.drawDashedLine(ctx, [[710, 514], [425, 514]], "#FF423C", true); //4a          5, 上
-      this.drawDashedLine(ctx, [[425, 514], [130, 514]], "#FF423C", true); //5a           5, 上
-
-			this.drawDashedLine(ctx, [[710, 522], [425, 522]], "#22AC38", false); //4b                 6， 下
-			this.drawDashedLine(ctx, [[425, 522], [130, 522]], "#22AC38"); //5b                 6， 下
+			this.drawDashedLine(ctx, [[710, 542], [425, 542]], "#22AC38", false); //4b                 6， 下
+			this.drawDashedLine(ctx, [[425, 542], [130, 542]], "#22AC38"); //5b                 6， 下
 
 
-			this.drawDashedLine(ctx, [[710, 545], [710, 522]], "#22AC38",false); //3b                 3,左
-			this.drawDashedLine(ctx, [[720, 545], [720, 522]], "#FF423C", true); //3a           4,右
+			this.drawDashedLine(ctx, [[710, 555], [710, 542]], "#22AC38",false); //3b                 3,左
+			this.drawDashedLine(ctx, [[720, 555], [720, 542]], "#FF423C", true); //3a           4,右
 
-			this.drawDashedLine(ctx, [[130, 570], [130, 537], [710, 537]], "#22AC38", false); //2b                5, 上
-			this.drawDashedLine(ctx, [[138, 570], [138, 545], [710, 545]], "#FF423C", true); //2a          6， 下
+			this.drawDashedLine(ctx, [[130, 590], [130, 557], [710, 557]], "#22AC38", false); //2b                5, 上
+			this.drawDashedLine(ctx, [[138, 590], [138, 565], [710, 565]], "#FF423C", true); //2a          6， 下
 
-			this.drawDashedLine(ctx, [[710, 564], [130, 564]], "#FF423C", true); //1a                      5, 上
-			this.drawDashedLine(ctx, [[710, 572], [130, 572]], "#22AC38", false); //1b                            6， 下
+			this.drawDashedLine(ctx, [[710, 584], [130, 584]], "#FF423C", true); //1a                      5, 上
+			this.drawDashedLine(ctx, [[710, 592], [130, 592]], "#22AC38", false); //1b                            6， 下
 		},
 		// 画一条皮带
 		// 绘制虚线或实线
@@ -631,7 +681,7 @@ export default {
 		// @param {Array} setLineDash - 点划线间距
 		// @param {Number} lineWidth - 线宽
 		// @param {String} color - 线段颜色
-		drawDashedLine(ctx, points, color = "#FF423C", clearArea = null, setLineDash = [4], lineWidth = 6) {
+		drawDashedLine(ctx, points, color = "#FF423C", clearArea = null, setLineDash = [4], lineWidth = 4) {
 			// let ctx = this.ctx;
 			ctx.save();
 			ctx.beginPath();
@@ -720,12 +770,14 @@ export default {
 		},
 		handle_md(md) {
 			// console.log(md);
-			let x = [723, 603, 723, 603, 436, 313, 436, 313, 146, 23, 146, 23];
+			// let x = [723, 603, 723, 603, 436, 313, 436, 313, 146, 23, 146, 23];
+			let x = [];
 			let index = 0;
 			for (const i in md) {
 				if (md.hasOwnProperty(i)) {
 					const value = md[i];
-					// this.drawCoalHeapOne(this.ctx, "./pic/" + value.url, x[index], 170, 100, value.end - value.start );
+          // this.drawCoalHeapOne(this.ctx, "./pic/" + value.url, x[index], 170, 100, value.end - value.start );
+          //                        ctx,                                src,       x,         y,     w,            h,                valueX, valueY, index                
 					this.drawCoalHeapOne(this.ctx, require("../assets/pic/" + value.url), x[index], value.end, 100, value.end - value.start, value.x, value.y, index );
 					index++;
 				}
