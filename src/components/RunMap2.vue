@@ -126,12 +126,12 @@ export default {
 		lmqStartXOne() {
 				let i = parseInt((this.lmq[0] - 1)/6);
 				let j = (this.lmq[0] - 1) - i*6;
-			return 674.5 - 23*i - 30*( i*5 + j) + 8 + 20;
+			return 674.5 - 23*i - 30*( i*5 + j) + 8 + 5;
 		},
 		lmqStartXTwo() {
 				let i = parseInt((this.lmq[1] - 1)/6);
 				let j = (this.lmq[1] - 1) - i*6;
-			return 674.5 - 23*i - 30*( i*5 + j) + 8 + 20;
+			return 674.5 - 23*i - 30*( i*5 + j) + 8 + 5;
 		},
 		dljPositionYOne() {
 			return 140 + 360 - (this.dlj[0].position * 1.2);
@@ -147,14 +147,14 @@ export default {
 
 		this.ctx = document.getElementById("myCanvas").getContext("2d");
 		this.ctxBelt = document.getElementById("myCanvasBelt").getContext("2d");
-		this.drawRoundedRect(this.ctx, 20, 140, 107, 360, 60, 20, true, false, 2, "#595959", "#959595");
-		this.drawRoundedRect(this.ctx, 143, 140, 107, 360, 20, 20, true, false, 2, "#595959", "#959595");
+		this.drawRoundedRect(this.ctx, 30, 140, 97, 360, 60, 20, true, false, 2, "#595959", "#959595");
+		this.drawRoundedRect(this.ctx, 143, 140, 97, 360, 20, 20, true, false, 2, "#595959", "#959595");
 
-		this.drawRoundedRect(this.ctx, 310, 140, 105, 358, 20, 20, true, true, 2, "#595959", "#959595");
-		this.drawRoundedRect(this.ctx, 433, 140, 105, 358, 20, 20, true, true, 2, "#595959", "#959595");
+		this.drawRoundedRect(this.ctx, 320, 140, 95, 358, 20, 20, true, true, 2, "#595959", "#959595");
+		this.drawRoundedRect(this.ctx, 433, 140, 95, 358, 20, 20, true, true, 2, "#595959", "#959595");
 
-		this.drawRoundedRect(this.ctx, 600, 140, 107, 360, 20, 20, true, false, 2, "#595959", "#959595");
-		this.drawRoundedRect(this.ctx, 723, 140, 107, 360, 20, 60, true, false, 2, "#595959", "#959595");
+		this.drawRoundedRect(this.ctx, 610, 140, 97, 360, 20, 20, true, false, 2, "#595959", "#959595");
+		this.drawRoundedRect(this.ctx, 723, 140, 97, 360, 20, 60, true, false, 2, "#595959", "#959595");
 
 		//绘画煤仓
 		// this.drawCoalBunker();
@@ -492,7 +492,7 @@ export default {
 			imageObj.src = require("../assets/beltEnd.png"); //皮带的终点
 			imageObj.onload = () => {
 				// ctx.save();
-				ctx.drawImage(imageObj, 40, 1, 20, 20);
+				ctx.drawImage(imageObj, 55, 1, 20, 20);
 				// ctx.restore();
 			};
 		},
@@ -579,44 +579,50 @@ export default {
 			ctx.clearRect(0, 0, 850, 650);
 
 			//计算左上角犁煤器左侧的皮带所处的X轴的长度
-			this.drawDashedLine(ctx, [[this.lmqStartXOne, 7], [50, 7]], "#FF423C", false); //old:[710, 7], [30, 7] 左上角犁煤器左侧的皮带， 最顶层的皮带, 1
-			this.drawDashedLine(ctx, [[this.lmqStartXTwo, 16], [50, 16]], "#FF423C", false); //old:[710, 16], [30, 16] 左上角犁煤器左侧的皮带，从上往下第二个的皮带, 2
+			this.drawDashedLine(ctx, [[710, 7], [65, 7]], "#FF423C", true); //11a1 最顶层的皮带, 1
+      this.drawDashedLine(ctx, [[710, 16], [65, 16]], "#FF423C", true); //11b1 从上往下第二个的皮带, 2
+      
+			this.drawDashedLine(ctx, [[this.lmqStartXOne, 7], [65, 7]], "#FF423C", false); //11a2  old:[710, 7], [30, 7] 左上角犁煤器左侧的皮带， 最顶层的皮带, 1
+			this.drawDashedLine(ctx, [[this.lmqStartXTwo, 16], [65, 16]], "#FF423C", false); //11b2 old:[710, 16], [30, 16] 左上角犁煤器左侧的皮带，从上往下第二个的皮带, 2
 
-			this.drawDashedLine(ctx, [[710, 7], [50, 7]], "#FF423C", true); // 最顶层的皮带, 1
-			this.drawDashedLine(ctx, [[710, 16], [50, 16]], "#FF423C", false); // 从上往下第二个的皮带, 2
 
-			this.drawDashedLine(ctx, [[710, 80], [710, 7]], "#22AC38"); //old:[710, 120], [710, 7] 3,左
-			this.drawDashedLine(ctx, [[720, 80], [720, 7]], "#FF423C", true); //old:[720, 120], [720, 7] 4,右
+			this.drawDashedLine(ctx, [[710, 80], [710, 7]], "#22AC38"); //10b old:[710, 120], [710, 7] 3,左 绿色
+			this.drawDashedLine(ctx, [[720, 80], [720, 7]], "#FF423C", true); //10a  old:[720, 120], [720, 7] 4,右 红色
 
-			this.drawDashedLine(ctx, [[710, 120], [710, 80]], "#22AC38"); // old:[710, 120], [710, 7] 增加转运站多的皮带， 3,左
-			this.drawDashedLine(ctx, [[720, 120], [720, 80]], "#FF423C", true); // old:[720, 120], [720, 7]  增加转运站多的皮带，4,右
+			this.drawDashedLine(ctx, [[710, 120], [710, 80]], "#22AC38"); //9b old:[710, 120], [710, 7] 增加转运站多的皮带， 3,左
+			this.drawDashedLine(ctx, [[720, 120], [720, 80]], "#FF423C", true); //9a  old:[720, 120], [720, 7]  增加转运站多的皮带，4,右
 
-			this.drawDashedLine(ctx, [[130, 124], [710, 124]], "#FF423C", true); // 5, 上
-			this.drawDashedLine(ctx, [[420, 132], [710, 132]], "#22AC38"); // 6， 下
+			this.drawDashedLine(ctx, [[130, 124], [420, 124]], "#FF423C", true); //7    5, 上
+			this.drawDashedLine(ctx, [[420, 124], [710, 124]], "#FF423C", true); //8b   5, 上
+			this.drawDashedLine(ctx, [[420, 132], [710, 132]], "#22AC38"); //8a    6， 下
 
 			//斗轮机上面的皮带
-			this.drawDashedLine(ctx, [[135, this.dljPositionYThree], [135, 120]], "#FF423C", true); //7 左
-			this.drawDashedLine(ctx, [[425, this.dljPositionYTwo], [425, 120]], "#22AC38"); //8 中
-			this.drawDashedLine(ctx, [[715, this.dljPositionYOne], [715, 120]], "#22AC38"); //9 右
+			this.drawDashedLine(ctx, [[135, this.dljPositionYThree], [135, 120]], "#FF423C", true); //6c2   7 左
+			this.drawDashedLine(ctx, [[425, this.dljPositionYTwo], [425, 120]], "#22AC38"); //6b2           8 中
+			this.drawDashedLine(ctx, [[715, this.dljPositionYOne], [715, 120]], "#22AC38"); //6a2           9 右
 
 			//斗轮机下面的皮带
-			this.drawDashedLine(ctx, [[135, 510], [135, this.dljPositionYThree]], "#FF423C", true); //7 左
-			this.drawDashedLine(ctx, [[425, 510], [425, this.dljPositionYTwo]], "#22AC38", false); //8 中
-			this.drawDashedLine(ctx, [[715, 510], [715, this.dljPositionYOne]], "#22AC38", false); //9 右
+			this.drawDashedLine(ctx, [[135, 510], [135, this.dljPositionYThree]], "#FF423C", true); //6c1           7 左
+			this.drawDashedLine(ctx, [[425, 510], [425, this.dljPositionYTwo]], "#22AC38", false); //6b1           8 中
+			this.drawDashedLine(ctx, [[715, 510], [715, this.dljPositionYOne]], "#22AC38", false); //6a1           9 右
 
 
 
-			this.drawDashedLine(ctx, [[710, 514], [130, 514]], "#FF423C", true); // 5, 上
-			this.drawDashedLine(ctx, [[710, 522], [130, 522]], "#22AC38"); // 6， 下
+      this.drawDashedLine(ctx, [[710, 514], [425, 514]], "#FF423C", true); //4a          5, 上
+      this.drawDashedLine(ctx, [[425, 514], [130, 514]], "#FF423C", true); //5a           5, 上
 
-			this.drawDashedLine(ctx, [[710, 545], [710, 522]], "#22AC38"); // 3,左
-			this.drawDashedLine(ctx, [[720, 545], [720, 522]], "#FF423C", true); // 4,右
+			this.drawDashedLine(ctx, [[710, 522], [425, 522]], "#22AC38", false); //4b                 6， 下
+			this.drawDashedLine(ctx, [[425, 522], [130, 522]], "#22AC38"); //5b                 6， 下
 
-			this.drawDashedLine(ctx, [[130, 570], [130, 537], [710, 537]], "#22AC38"); // 5, 上
-			this.drawDashedLine(ctx, [[138, 570], [138, 545], [710, 545]], "#FF423C", true); // 6， 下
 
-			this.drawDashedLine(ctx, [[710, 564], [130, 564]], "#FF423C", true); // 5, 上
-			this.drawDashedLine(ctx, [[710, 572], [130, 572]], "#22AC38"); // 6， 下
+			this.drawDashedLine(ctx, [[710, 545], [710, 522]], "#22AC38",false); //3b                 3,左
+			this.drawDashedLine(ctx, [[720, 545], [720, 522]], "#FF423C", true); //3a           4,右
+
+			this.drawDashedLine(ctx, [[130, 570], [130, 537], [710, 537]], "#22AC38", false); //2b                5, 上
+			this.drawDashedLine(ctx, [[138, 570], [138, 545], [710, 545]], "#FF423C", true); //2a          6， 下
+
+			this.drawDashedLine(ctx, [[710, 564], [130, 564]], "#FF423C", true); //1a                      5, 上
+			this.drawDashedLine(ctx, [[710, 572], [130, 572]], "#22AC38", false); //1b                            6， 下
 		},
 		// 画一条皮带
 		// 绘制虚线或实线
@@ -774,11 +780,9 @@ export default {
     setPageScale(val, baseline) {
       let newPageScale = (val / baseline).toFixed(3);
       if (this.transformBig && this.unitPageScale < newPageScale ) {
-        console.log(this.unitPageScale , newPageScale)
         this.unitPageScale = newPageScale;
       }
       if (!this.transformBig && this.unitPageScale > newPageScale ) {
-        console.log(this.unitPageScale , newPageScale)
         this.unitPageScale = newPageScale;
       }
     },
