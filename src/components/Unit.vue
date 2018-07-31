@@ -317,7 +317,7 @@ export default {
       this.active = index;
     },
     handleClientWidth(val) {
-      console.log(val, (val / 600).toFixed(3));
+      // console.log(val, (val / 600).toFixed(3));
       if (val < 800) {
         this.unitPageScale = (val / 800).toFixed(3);
         this.unitPageScaleTop = (val - 800) / 2;
@@ -330,7 +330,7 @@ export default {
       }
     },
     handleClientHeight(val) {
-      console.log(val, (val / 600).toFixed(3));
+      // console.log(val, (val / 600).toFixed(3));
       if (val < 600) {
         this.unitPageScale = (val / 600).toFixed(3);
         this.unitPageScaleTop = (val - 600) / 2;

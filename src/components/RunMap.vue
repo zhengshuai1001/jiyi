@@ -1,6 +1,8 @@
 <template>
+	<!-- <div class="run-map-page" :style="{ position: 'relative' , 'transform': 'scale(' + unitPageScale +')', top: unitPageScaleTop + 'px' }"> -->
+	<!-- <div class="run-map-page" :style="{ position: 'relative' , zoom: unitPageScale }"> -->
 	<div class="run-map-page">
-	<div class="canvas-box">
+	<div class="canvas-box":style="{ zoom: unitPageScale }">
 		<canvas id="myCanvasBelt" width="850" height="650"></canvas>
 		<canvas id="myCanvas" width="850" height="650"></canvas>
 		<div 
@@ -36,7 +38,7 @@ import axios from "axios";
 
 let Ajax = axios.create({
   baseURL:'https://www.easy-mock.com/mock/5b2bc70743896129857dc8dc/jiyi',
-  timeout: 5000,
+  timeout: 9000,
   // headers: { 'Content-Type': 'application/json' },
   responseType: 'json',
 });
@@ -54,6 +56,11 @@ export default {
 	name: "RunMap",
 	data() {
 		return {
+      clientWidth: document.documentElement.clientWidth,
+      clientHeight: document.documentElement.clientHeight,
+      unitPageScale: 1,
+      unitPageScaleTop: 0,
+      transformBig: false, //缩放类型是变大吗？判断当前是缩放变大还是变小
 			ctx: null,
 			ctxBelt: null,
 			liftingArmImg: [
@@ -86,17 +93,45 @@ export default {
 			],
 			mc: [], //煤仓
 		}
-	},
+  },
+  beforeMount() {
+    window.onresize = () => {
+      // console.log(this.clientWidth, document.documentElement.clientWidth)
+      // this.clientWidth = document.documentElement.clientWidth;
+      // this.clientHeight = document.documentElement.clientHeight;
+
+      let newClientWidth = document.documentElement.clientWidth;
+      let newClientHeight = document.documentElement.clientHeight;
+      if (this.clientWidth < newClientWidth || this.clientHeight < newClientHeight) {
+        this.transformBig = true;
+      }
+      if (this.clientWidth > newClientWidth || this.clientHeight > newClientHeight) {
+        this.transformBig = false;
+      }
+      this.clientWidth = newClientWidth;
+      this.clientHeight = newClientHeight;
+    };
+    this.handleClientWidth(this.clientWidth);
+    this.handleClientHeight(this.clientHeight);
+  },
+  watch: {
+    clientWidth(val) {
+      this.throttle(val, "width");
+    },
+    clientHeight(val) {
+      this.throttle(val, "height");
+    }
+  },
 	computed: {
 		lmqStartXOne() {
 				let i = parseInt((this.lmq[0] - 1)/6);
 				let j = (this.lmq[0] - 1) - i*6;
-			return 674.5 - 23*i - 30*( i*5 + j) + 8;
+			return 674.5 - 23*i - 30*( i*5 + j) + 8 + 20;
 		},
 		lmqStartXTwo() {
 				let i = parseInt((this.lmq[1] - 1)/6);
 				let j = (this.lmq[1] - 1) - i*6;
-			return 674.5 - 23*i - 30*( i*5 + j) + 8;
+			return 674.5 - 23*i - 30*( i*5 + j) + 8 + 20;
 		},
 		dljPositionYOne() {
 			return 140 + 360 - (this.dlj[0].position * 1.2);
@@ -112,14 +147,14 @@ export default {
 
 		this.ctx = document.getElementById("myCanvas").getContext("2d");
 		this.ctxBelt = document.getElementById("myCanvasBelt").getContext("2d");
-		this.drawRoundedRect(this.ctx, 20, 140, 107, 360, 40, 10, true, false, 2, "#595959", "#959595");
-		this.drawRoundedRect(this.ctx, 143, 140, 107, 360, 10, 10, true, false, 2, "#595959", "#959595");
+		this.drawRoundedRect(this.ctx, 20, 140, 107, 360, 60, 20, true, false, 2, "#595959", "#959595");
+		this.drawRoundedRect(this.ctx, 143, 140, 107, 360, 20, 20, true, false, 2, "#595959", "#959595");
 
-		this.drawRoundedRect(this.ctx, 310, 140, 105, 358, 10, 10, true, true, 2, "#595959", "#959595");
-		this.drawRoundedRect(this.ctx, 433, 140, 105, 358, 10, 10, true, true, 2, "#595959", "#959595");
+		this.drawRoundedRect(this.ctx, 310, 140, 105, 358, 20, 20, true, true, 2, "#595959", "#959595");
+		this.drawRoundedRect(this.ctx, 433, 140, 105, 358, 20, 20, true, true, 2, "#595959", "#959595");
 
-		this.drawRoundedRect(this.ctx, 600, 140, 107, 360, 10, 10, true, false, 2, "#595959", "#959595");
-		this.drawRoundedRect(this.ctx, 723, 140, 107, 360, 10, 40, true, false, 2, "#595959", "#959595");
+		this.drawRoundedRect(this.ctx, 600, 140, 107, 360, 20, 20, true, false, 2, "#595959", "#959595");
+		this.drawRoundedRect(this.ctx, 723, 140, 107, 360, 20, 60, true, false, 2, "#595959", "#959595");
 
 		//绘画煤仓
 		// this.drawCoalBunker();
@@ -457,7 +492,7 @@ export default {
 			imageObj.src = require("../assets/beltEnd.png"); //皮带的终点
 			imageObj.onload = () => {
 				// ctx.save();
-				ctx.drawImage(imageObj, 20, 1, 20, 20);
+				ctx.drawImage(imageObj, 40, 1, 20, 20);
 				// ctx.restore();
 			};
 		},
@@ -544,11 +579,11 @@ export default {
 			ctx.clearRect(0, 0, 850, 650);
 
 			//计算左上角犁煤器左侧的皮带所处的X轴的长度
-			this.drawDashedLine(ctx, [[this.lmqStartXOne, 7], [30, 7]], "#FF423C", false); //old:[710, 7], [30, 7] 左上角犁煤器左侧的皮带， 最顶层的皮带, 1
-			this.drawDashedLine(ctx, [[this.lmqStartXTwo, 16], [30, 16]], "#FF423C", false); //old:[710, 16], [30, 16] 左上角犁煤器左侧的皮带，从上往下第二个的皮带, 2
+			this.drawDashedLine(ctx, [[this.lmqStartXOne, 7], [50, 7]], "#FF423C", false); //old:[710, 7], [30, 7] 左上角犁煤器左侧的皮带， 最顶层的皮带, 1
+			this.drawDashedLine(ctx, [[this.lmqStartXTwo, 16], [50, 16]], "#FF423C", false); //old:[710, 16], [30, 16] 左上角犁煤器左侧的皮带，从上往下第二个的皮带, 2
 
-			this.drawDashedLine(ctx, [[710, 7], [30, 7]], "#FF423C", true); // 最顶层的皮带, 1
-			this.drawDashedLine(ctx, [[710, 16], [30, 16]], "#FF423C", false); // 从上往下第二个的皮带, 2
+			this.drawDashedLine(ctx, [[710, 7], [50, 7]], "#FF423C", true); // 最顶层的皮带, 1
+			this.drawDashedLine(ctx, [[710, 16], [50, 16]], "#FF423C", false); // 从上往下第二个的皮带, 2
 
 			this.drawDashedLine(ctx, [[710, 80], [710, 7]], "#22AC38"); //old:[710, 120], [710, 7] 3,左
 			this.drawDashedLine(ctx, [[720, 80], [720, 7]], "#FF423C", true); //old:[720, 120], [720, 7] 4,右
@@ -713,7 +748,76 @@ export default {
 		handle_xcj(xcj) {
 			// console.log(xcj);
 		},
+    handleClientWidth(val) {
+      // if (val < 900) {
+      //   this.unitPageScale = (val / 900).toFixed(3);
+      //   this.unitPageScaleTop = (val - 900) / 2;
+      // } else if (val >= 900 && val <= 1900) {
+      //   this.unitPageScale = 1;
+      //   this.unitPageScaleTop = 0;
+      // } else {
+      //   this.unitPageScale = (val / 1900).toFixed(3);
+      //   this.unitPageScaleTop = (val - 900) / 20;
+      // }
 
+      if (val < 900) {
+        this.setPageScale(val, 900);
+      } else if (val >= 900 && val <= 1900) {
+        if (this.clientHeight > 700) {
+          this.unitPageScale = 1;
+        }
+      } else {
+        this.setPageScale(val, 1900);
+      }
+
+    },
+    setPageScale(val, baseline) {
+      let newPageScale = (val / baseline).toFixed(3);
+      if (this.transformBig && this.unitPageScale < newPageScale ) {
+        console.log(this.unitPageScale , newPageScale)
+        this.unitPageScale = newPageScale;
+      }
+      if (!this.transformBig && this.unitPageScale > newPageScale ) {
+        console.log(this.unitPageScale , newPageScale)
+        this.unitPageScale = newPageScale;
+      }
+    },
+    handleClientHeight(val) {
+      // if (val < 700) {
+      //   this.unitPageScale = (val / 700).toFixed(3);
+      //   this.unitPageScaleTop = (val - 700) / 2;
+      // } else if (val >= 700 && val <= 1080) {
+      //   this.unitPageScale = 1;
+      //   this.unitPageScaleTop = 0;
+      // } else {
+      //   this.unitPageScale = (val / 1080).toFixed(3);
+      //   this.unitPageScaleTop = (val - 700) / 4;
+      // }
+
+      if (val < 700) {
+        this.setPageScale(val, 700);
+      } else if (val >= 700 && val <= 1080) {
+        if (this.clientWidth >= 900) {
+          this.unitPageScale = 1;
+        }
+      } else {
+          this.setPageScale(val, 1080);
+      }
+    },
+    throttle(val, type = "width") {
+      if (!this.timer) {
+        this.timer = true;
+        setTimeout(() => {
+          if (type == "width") {
+            this.handleClientWidth(val);
+          }
+          if (type == "height") {
+            this.handleClientHeight(val);
+          }
+          this.timer = false;
+        }, 50);
+      }
+    },
 	}
 }
 </script>
