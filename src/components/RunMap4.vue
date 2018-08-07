@@ -2,8 +2,9 @@
 	<!-- <div class="run-map-page" :style="{ position: 'relative' , 'transform': 'scale(' + unitPageScale +')', top: unitPageScaleTop + 'px' }"> -->
 	<!-- <div class="run-map-page" :style="{ position: 'relative' , zoom: unitPageScale }"> -->
 	<div class="run-map-page">
-	<!-- <div class="canvas-box":style="{ zoom: unitPageScale }"> -->
-	<div class="canvas-box":style="{ zoom: 1.2 }">
+	<div class="canvas-box" :style="{ zoom: unitPageScale }">
+	<!-- <div class="canvas-box" :style="{ zoom: 1.2 }"> -->
+	<!-- <div class="canvas-box" :style="{ zoom: 1 }"> -->
 		<canvas id="myCanvasBelt" width="850" height="650"></canvas>
 		<canvas id="myCanvas" width="850" height="720"></canvas>
 		<div 
@@ -13,6 +14,7 @@
 				'left': liftingArmImg[0].left + 'px',
 				'top': liftingArmImg[0].top + 'px',
 				'transform': 'rotateX(0) rotateZ('+liftingArmImg[0].rotation+'deg)',
+        'background-image': liftingArmImg[0].status == 1 ? 'url('+require('../assets/liftingArm_running.png')+')' : 'url('+require('../assets/liftingArm.png')+')',
 			}"></div>
 			<div 
 			class="lifting-arm-img" 
@@ -21,6 +23,7 @@
 				'left': liftingArmImg[1].left + 'px',
 				'top': liftingArmImg[1].top + 'px',
 				'transform': 'rotateX(0) rotateZ('+liftingArmImg[1].rotation+'deg)',
+        'background-image': liftingArmImg[1].status == 1 ? 'url('+require('../assets/liftingArm_running.png')+')' : 'url('+require('../assets/liftingArm.png')+')',
 			}"></div>
 			<div 
 			class="lifting-arm-img" 
@@ -29,6 +32,7 @@
 				'left': liftingArmImg[2].left + 'px',
 				'top': liftingArmImg[2].top + 'px',
 				'transform': 'rotateX(0) rotateZ('+liftingArmImg[2].rotation+'deg)',
+        'background-image': liftingArmImg[2].status == 1 ? 'url('+require('../assets/liftingArm_running.png')+')' : 'url('+require('../assets/liftingArm.png')+')',
 			}"></div>
 	</div>
 	</div>
@@ -52,6 +56,49 @@ Ajax.interceptors.response.use(function (response) {
   // 对响应错误做点什么
   return Promise.reject(error);
 });
+
+let canvasPrototype = window.CanvasRenderingContext2D && CanvasRenderingContext2D.prototype;
+canvasPrototype.dottedLine = function (x1,y1, x2, y2, interval) {
+    this.save();
+    this.beginPath();
+    if (!interval) {
+        interval = 5;
+    }
+ 
+    var isHorizontal = true;
+ 
+    if (x1 == x2) {
+        isHorizontal = false;
+    }
+ 
+    var len = isHorizontal ? x2 - x1 : y2 - y1;
+ 
+    this.moveTo(x1, y1);
+ 
+    var progress = 0;
+ 
+    while (len > progress) {
+        progress += interval;
+ 
+        if (progress > len) {
+            progress = len;
+        }
+ 
+        if (isHorizontal) {
+            this.moveTo(x1 + progress, y1);
+            this.arc(x1 + progress, y1, 1, 0, Math.PI * 2, true);
+            this.fill();
+        } else {
+            this.moveTo(x1, y1 + progress);
+            this.arc(x1, y1 + progress, 1, 0, Math.PI * 2, true);
+            this.fill();
+        }
+    }
+    this.closePath();
+    this.restore();
+    
+}
+
 
 export default {
 	name: "RunMap",
@@ -92,7 +139,24 @@ export default {
 				{"position":61,"rotation":22.85,"status":0},
 				{"position":221.8,"rotation":47,"status":1}
 			],
-			mc: [], //煤仓
+      mc: [], //煤仓
+      xcj: [
+        {
+          "position": 0,
+          "pitch": 0,
+          "status": 0
+        },
+        {
+          "position": 0,
+          "pitch": 0,
+          "status": 0
+        },
+        {
+          "position": 0,
+          "pitch": 0,
+          "status": 0
+        }
+      ]
 		}
   },
   beforeMount() {
@@ -148,14 +212,14 @@ export default {
 
 		this.ctx = document.getElementById("myCanvas").getContext("2d");
 		this.ctxBelt = document.getElementById("myCanvasBelt").getContext("2d");
-		this.drawRoundedRect(this.ctx, 30, 160, 97, 360, 60, 20, true, false, 2, "#595959", "#959595");
-		this.drawRoundedRect(this.ctx, 143, 160, 97, 360, 20, 20, true, false, 2, "#595959", "#959595");
+		this.drawRoundedRect(this.ctx, 30, 140, 97, 400, 60, 20, true, false, 2, "#595959", "#959595");
+		this.drawRoundedRect(this.ctx, 143, 140, 97, 400, 20, 20, true, false, 2, "#595959", "#959595");
 
-		this.drawRoundedRect(this.ctx, 320, 160, 95, 358, 20, 20, true, true, 2, "#595959", "#959595");
-		this.drawRoundedRect(this.ctx, 433, 160, 95, 358, 20, 20, true, true, 2, "#595959", "#959595");
+		this.drawRoundedRect(this.ctx, 320, 140, 95, 398, 20, 20, true, true, 2, "#595959", "#959595");
+		this.drawRoundedRect(this.ctx, 433, 140, 95, 398, 20, 20, true, true, 2, "#595959", "#959595");
 
-		this.drawRoundedRect(this.ctx, 610, 160, 97, 360, 20, 20, true, false, 2, "#595959", "#959595");
-		this.drawRoundedRect(this.ctx, 723, 160, 97, 360, 20, 60, true, false, 2, "#595959", "#959595");
+		this.drawRoundedRect(this.ctx, 610, 140, 97, 400, 20, 20, true, false, 2, "#595959", "#959595");
+		this.drawRoundedRect(this.ctx, 723, 140, 97, 400, 20, 60, true, false, 2, "#595959", "#959595");
 
 		//绘画煤仓
 		// this.drawCoalBunker();
@@ -176,8 +240,7 @@ export default {
 		// this.drawBucketWheelOne(this.ctx, 413, 201, 45, 0, 1);	// old x: 420
 		// this.drawBucketWheelOne(this.ctx, 704, 251, 135, 0, 2);	// old x: 710
 
-		//画所有的转运站
-		this.drawTransferStationAll()
+		
 
 		//画皮带，重头戏
 		// this.drawBelt(this.ctx);
@@ -185,7 +248,13 @@ export default {
 		this.animation(this.ctxBelt);
 
 		//画船
-		this.drawShip(this.ctx);
+    this.drawShip(this.ctx);
+    
+    //画三通
+    this.drawSTAll(this.ctx);
+
+    //画所有的转运站
+		this.drawTransferStationAll()
 
 		//发送ajax请求
 		this.ajaxGetData();
@@ -364,7 +433,8 @@ export default {
 			ctx.font = '16px Arial';
 			ctx.fillStyle = fontColor;
 			ctx.textAlign = 'center';
-			ctx.fillText(fontText, 10, 60);
+			// ctx.fillText(fontText, 10, 60);
+			ctx.fillText(fontText, 10, 50); // 0807 update
 			ctx.stroke();
 
 			//渲染煤仓下的机组编号
@@ -373,7 +443,8 @@ export default {
 				ctx.font = '14px Arial';
 				ctx.fillStyle = "#8a8a8a";
 				ctx.textAlign = 'start';
-				ctx.fillText(`#${outerIndex + 1}机组`, 0, 76);
+				// ctx.fillText(`#${outerIndex + 1}机组`, 0, 76);
+				ctx.fillText(`#${outerIndex + 1}机组`, 0, 66); // 0807 update
 				ctx.closePath();
 			}
 
@@ -433,7 +504,7 @@ export default {
 		drawBucketWheelOne(ctx, x, end, rotation, status, index){
 			let y = 160 + 360 + 14 - (end * 1.2);
 			let imageObj = new Image();
-			imageObj.src = require("../assets/fuselage.png"); //斗轮机的机身部分
+			imageObj.src = status == 1 ?  require("../assets/fuselage_running.png") : require("../assets/fuselage.png"); //斗轮机的机身部分
 			imageObj.onload = () => {
 				// ctx.save();
 				// ctx.drawImage(imageObj, x, y, 15, 66);
@@ -454,9 +525,10 @@ export default {
 			this.liftingArmImg[index].left = x - 3;
 			// this.liftingArmImg[index].left = x;
 			this.liftingArmImg[index].top = y - 40 - 16;
-			this.liftingArmImg[index].top = y - 55 - 16;
-			// this.liftingArmImg[index].top = y - 40 - 30;
+			// this.liftingArmImg[index].top = y - 55 - 16;
+			this.liftingArmImg[index].top = y - 40 - 10;
 			this.liftingArmImg[index].rotation = rotation;
+			this.liftingArmImg[index].status = status;
 		},
 		//画一个转运站，皮带中间的那些转运站
 		drawTransferStationOne(ctx, x, y){
@@ -464,23 +536,26 @@ export default {
 			imageObj.src = require("../assets/transferStation.png"); //中转站
 			imageObj.onload = () => {
 				// ctx.save();
-				ctx.drawImage(imageObj, x, y, 31, 16);
+        // ctx.drawImage(imageObj, x, y, 31, 16);
+        x+=3;
+        y-=5;
+				ctx.drawImage(imageObj, x, y, 26, 26);
 				// ctx.restore();
 			};
 		},
 		//画所有的转运站
 		drawTransferStationAll(){
-			this.drawTransferStationOne(this.ctx, 120, 140); //-23
-			this.drawTransferStationOne(this.ctx, 410, 140);
-			this.drawTransferStationOne(this.ctx, 700, 140);
-			this.drawTransferStationOne(this.ctx, 700, 80); //增加一个转运站
+			this.drawTransferStationOne(this.ctx, 120, 120); //-23
+			this.drawTransferStationOne(this.ctx, 410, 120);
+			this.drawTransferStationOne(this.ctx, 700, 120);
+			this.drawTransferStationOne(this.ctx, 700, 70); //增加一个转运站
 			this.drawTransferStationOne(this.ctx, 700, 3);
 
-			this.drawTransferStationOne(this.ctx, 120, 530); //-23
-			this.drawTransferStationOne(this.ctx, 410, 530);
-			this.drawTransferStationOne(this.ctx, 700, 530);
+			this.drawTransferStationOne(this.ctx, 120, 550); //-23
+			this.drawTransferStationOne(this.ctx, 410, 550);
+			this.drawTransferStationOne(this.ctx, 700, 550);
 
-			this.drawTransferStationOne(this.ctx, 700, 583);
+			this.drawTransferStationOne(this.ctx, 700, 593);
 
 			this.drawTransferStationOne(this.ctx, 120, 630);
 
@@ -581,49 +656,53 @@ export default {
 
 			//计算左上角犁煤器左侧的皮带所处的X轴的长度
 			this.drawDashedLine(ctx, [[710, 7], [65, 7]], "#FF423C", true); //11a1 最顶层的皮带, 1
-      this.drawDashedLine(ctx, [[710, 16], [65, 16]], "#FF423C", true); //11b1 从上往下第二个的皮带, 2
+      this.drawDashedLine(ctx, [[710, 16], [65, 16]], "#FF423C", false); //11b1 从上往下第二个的皮带, 2
       
 			this.drawDashedLine(ctx, [[this.lmqStartXOne, 7], [65, 7]], "#FF423C", false); //11a2  old:[710, 7], [30, 7] 左上角犁煤器左侧的皮带， 最顶层的皮带, 1
 			this.drawDashedLine(ctx, [[this.lmqStartXTwo, 16], [65, 16]], "#FF423C", false); //11b2 old:[710, 16], [30, 16] 左上角犁煤器左侧的皮带，从上往下第二个的皮带, 2
 
 
-			this.drawDashedLine(ctx, [[710, 100], [710, 7]], "#22AC38"); //10b old:[710, 120], [710, 7] 3,左 绿色
-			this.drawDashedLine(ctx, [[720, 100], [720, 7]], "#FF423C", true); //10a  old:[720, 120], [720, 7] 4,右 红色
+			this.drawDashedLine(ctx, [[710, 80], [710, 7]], "#22AC38"); //10b old:[710, 120], [710, 7] 3,左 绿色
+			this.drawDashedLine(ctx, [[720, 80], [720, 7]], "#FF423C", true); //10a  old:[720, 120], [720, 7] 4,右 红色
 
-			this.drawDashedLine(ctx, [[710, 140], [710, 90]], "#22AC38"); //9b old:[710, 120], [710, 7] 增加转运站多的皮带， 3,左
-			this.drawDashedLine(ctx, [[720, 140], [720, 90]], "#FF423C", true); //9a  old:[720, 120], [720, 7]  增加转运站多的皮带，4,右
+			this.drawDashedLine(ctx, [[710, 120], [710, 80]], "#22AC38"); //9b old:[710, 120], [710, 7] 增加转运站多的皮带， 3,左
+			this.drawDashedLine(ctx, [[720, 120], [720, 80]], "#FF423C", true); //9a  old:[720, 120], [720, 7]  增加转运站多的皮带，4,右
 
-			this.drawDashedLine(ctx, [[130, 144], [420, 144]], "#FF423C", true); //7    5, 上
-			this.drawDashedLine(ctx, [[420, 144], [710, 144]], "#FF423C", true); //8b   5, 上
-			this.drawDashedLine(ctx, [[420, 152], [710, 152]], "#22AC38"); //8a    6， 下
+			this.drawDashedLine(ctx, [[130, 128], [420, 128]], "#FF423C", true); //7    5, 上
+			this.drawDashedLine(ctx, [[420, 124], [710, 124]], "#FF423C", true); //8b   5, 上
+			this.drawDashedLine(ctx, [[420, 132], [710, 132]], "#22AC38"); //8a    6， 下
 
 			//斗轮机上面的皮带
-			this.drawDashedLine(ctx, [[135, this.dljPositionYThree], [135, 140]], "#FF423C", true); //6c2   7 左
-			this.drawDashedLine(ctx, [[425, this.dljPositionYTwo], [425, 140]], "#22AC38"); //6b2           8 中
-			this.drawDashedLine(ctx, [[715, this.dljPositionYOne], [715, 140]], "#22AC38"); //6a2           9 右
+			this.drawDashedLine(ctx, [[135, this.dljPositionYThree], [135, 120]], "#FF423C", true); //6c2   7 左
+			this.drawDashedLine(ctx, [[425, this.dljPositionYTwo], [425, 120]], "#22AC38"); //6b2           8 中
+			this.drawDashedLine(ctx, [[715, this.dljPositionYOne], [715, 120]], "#22AC38"); //6a2           9 右
 
 			//斗轮机下面的皮带
-			this.drawDashedLine(ctx, [[135, 530], [135, this.dljPositionYThree]], "#FF423C", true); //6c1           7 左
-			this.drawDashedLine(ctx, [[425, 530], [425, this.dljPositionYTwo]], "#22AC38", false); //6b1           8 中
-			this.drawDashedLine(ctx, [[715, 530], [715, this.dljPositionYOne]], "#22AC38", false); //6a1           9 右
+			this.drawDashedLine(ctx, [[135, 550], [135, this.dljPositionYThree]], "#FF423C", true); //6c1           7 左
+			this.drawDashedLine(ctx, [[425, 550], [425, this.dljPositionYTwo]], "#22AC38", false); //6b1           8 中
+			this.drawDashedLine(ctx, [[715, 550], [715, this.dljPositionYOne]], "#22AC38", false); //6a1           9 右
 
 
 
-      this.drawDashedLine(ctx, [[710, 534], [425, 534]], "#FF423C", true); //4a          5, 上
-      this.drawDashedLine(ctx, [[425, 534], [130, 534]], "#FF423C", true); //5a           5, 上
+      this.drawDashedLine(ctx, [[710, 554], [425, 554]], "#FF423C", true); //4a          5, 上
+      this.drawDashedLine(ctx, [[425, 554], [130, 554]], "#FF423C", true); //5a           5, 上
 
-			this.drawDashedLine(ctx, [[710, 542], [425, 542]], "#22AC38", false); //4b                 6， 下
-			this.drawDashedLine(ctx, [[425, 542], [130, 542]], "#22AC38"); //5b                 6， 下
+			this.drawDashedLine(ctx, [[710, 562], [425, 562]], "#22AC38", false); //4b                 6， 下
+			this.drawDashedLine(ctx, [[425, 562], [130, 562]], "#22AC38"); //5b                 6， 下
 
 
-			this.drawDashedLine(ctx, [[710, 595], [710, 542]], "#22AC38",false); //3b                 3,左
-			this.drawDashedLine(ctx, [[720, 595], [720, 542]], "#FF423C", true); //3a           4,右
+			this.drawDashedLine(ctx, [[710, 595], [710, 562]], "#22AC38",false); //3b                 3,左
+			this.drawDashedLine(ctx, [[720, 595], [720, 562]], "#FF423C", true); //3a           4,右
 
-			this.drawDashedLine(ctx, [[130, 630], [130, 587], [710, 587]], "#22AC38", false); //2b                5, 上
-			this.drawDashedLine(ctx, [[138, 630], [138, 595], [710, 595]], "#FF423C", true); //2a          6， 下
+			this.drawDashedLine(ctx, [[130, 630], [130, 597], [710, 597]], "#22AC38", false); //2b                5, 上
+			this.drawDashedLine(ctx, [[138, 630], [138, 605], [710, 605]], "#FF423C", true); //2a          6， 下
 
-			this.drawDashedLine(ctx, [[710, 634], [130, 634]], "#FF423C", true); //1a                      5, 上
-			this.drawDashedLine(ctx, [[710, 642], [130, 642]], "#22AC38", false); //1b                            6， 下
+			this.drawDashedLine(ctx, [[470, 634], [130, 634]], "#FF423C", true); //1a                      5, 上
+      this.drawDashedLine(ctx, [[470, 642], [130, 642]], "#22AC38", false); //1b                     6， 下
+
+      //0807 update
+      this.drawDashedLine(ctx, [[710, 634], [470, 634]], "#22AC38", false); //0a                      5, 上
+			this.drawDashedLine(ctx, [[710, 642], [470, 642]], "#22AC38", false); //0b                     6， 下
 		},
 		// 画一条皮带
 		// 绘制虚线或实线
@@ -659,7 +738,149 @@ export default {
 			})
 			ctx.stroke();
 			ctx.closePath();
-			ctx.restore();
+      ctx.restore();
+    },
+    //画所有的三通
+    drawSTAll(ctx) {
+      
+			// ctx.clearRect(0, 0, 850, 650);
+
+			this.drawST(ctx, [[710, 7], [65, 7]], "#FF423C", true); //11a1 最顶层的皮带, 1
+      this.drawST(ctx, [[710, 16], [65, 16]], "#FF423C", false); //11b1 从上往下第二个的皮带, 2
+      
+			this.drawST(ctx, [[this.lmqStartXOne, 7], [65, 7]], "#FF423C", false); //11a2  old:[710, 7], [30, 7] 左上角犁煤器左侧的皮带， 最顶层的皮带, 1
+			this.drawST(ctx, [[this.lmqStartXTwo, 16], [65, 16]], "#FF423C", false); //11b2 old:[710, 16], [30, 16] 左上角犁煤器左侧的皮带，从上往下第二个的皮带, 2
+
+
+			this.drawST(ctx, [[710, 80], [710, 7]], "#22AC38"); //10b old:[710, 120], [710, 7] 3,左 绿色
+			this.drawST(ctx, [[720, 80], [720, 7]], "#FF423C", true); //10a  old:[720, 120], [720, 7] 4,右 红色
+
+			this.drawST(ctx, [[710, 120], [710, 80]], "#22AC38"); //9b old:[710, 120], [710, 7] 增加转运站多的皮带， 3,左
+			this.drawST(ctx, [[720, 120], [720, 80]], "#FF423C", true); //9a  old:[720, 120], [720, 7]  增加转运站多的皮带，4,右
+
+			this.drawST(ctx, [[130, 128], [420, 128]], "#FF423C", true, [true, true]); //7    5, 上
+			this.drawST(ctx, [[420, 124], [710, 124]], "#FF423C", true, [true, true]); //8b   5, 上
+			this.drawST(ctx, [[420, 132], [710, 132]], "#22AC38"); //8a    6， 下
+
+			//斗轮机上面的皮带
+			this.drawST(ctx, [[135, this.dljPositionYThree], [135, 120]], "#FF423C", true, [false, true]); //6c2   7 左
+			this.drawST(ctx, [[425, this.dljPositionYTwo], [425, 120]], "#22AC38"); //6b2           8 中
+			this.drawST(ctx, [[715, this.dljPositionYOne], [715, 120]], "#22AC38"); //6a2           9 右
+
+			//斗轮机下面的皮带
+			this.drawST(ctx, [[135, 550], [135, this.dljPositionYThree]], "#FF423C", true, [true, false]); //6c1           7 左
+			this.drawST(ctx, [[425, 550], [425, this.dljPositionYTwo]], "#22AC38", false); //6b1           8 中
+			this.drawST(ctx, [[715, 550], [715, this.dljPositionYOne]], "#22AC38", false); //6a1           9 右
+
+
+
+      this.drawST(ctx, [[710, 554], [425, 554]], "#FF423C", true, [true, true]); //4a          5, 上
+      this.drawST(ctx, [[425, 554], [130, 554]], "#FF423C", true, [true, true]); //5a           5, 上
+
+			this.drawST(ctx, [[710, 562], [425, 562]], "#22AC38", false); //4b                 6， 下
+			this.drawST(ctx, [[425, 562], [130, 562]], "#22AC38"); //5b                 6， 下
+
+
+			this.drawST(ctx, [[710, 595], [710, 562]], "#22AC38",false); //3b                 3,左
+			this.drawST(ctx, [[720, 595], [720, 562]], "#FF423C", true); //3a           4,右
+
+			this.drawST(ctx, [[130, 630], [130, 597], [710, 597]], "#22AC38", false); //2b                5, 上
+			this.drawST(ctx, [[138, 630], [138, 605], [710, 605]], "#FF423C", true); //2a          6， 下
+
+			this.drawST(ctx, [[470, 634], [130, 634]], "#FF423C", true); //1a                      5, 上
+      this.drawST(ctx, [[470, 642], [130, 642]], "#22AC38", false); //1b                     6， 下
+
+      //0807 update
+      this.drawST(ctx, [[710, 634], [470, 634]], "#22AC38", false); //0a                      5, 上
+			this.drawST(ctx, [[710, 642], [470, 642]], "#22AC38", false); //0b                     6， 下
+    },
+    //画三通, 画一条三通， 三通和皮带是一起的，相当于是皮带的起始点和结尾点的属性，
+    //由于皮带是动画，三通不是动画，于是分开渲染，通过皮带的定位参数，求得三通的定位参数
+    //其实前面几个参数都没啥作用，只有最后面的drawST，才判断是否需要画三通，
+    drawST(ctx, points, color = "#FF423C", clearArea = null, drawST = [false, false]) {
+      //画三通
+      ctx.save();
+      ctx.beginPath();
+      // ctx.dottedLine(10, 10, 200, 20, 5);
+
+      let point1 = points[0]; //第一个点
+      let point2 = points[1]; //第二个点
+      let isHorizontalLine1 = false; //判断三通是不是横线
+      let isFromLeftToRight1 = false; // 如果三通是横线，判断横线动画方向是不是从左到右。
+      let isFromBottomToUp1 = false;
+      if (point1[0] < point2[0]) {
+        ///从左到右
+        isFromLeftToRight1 = true;
+      }
+      if (point1[1] > point2[1]) {
+        //从下到上
+        isFromBottomToUp1 = true;
+      }
+      if (point1[1] == point2[1]) {
+        //说明是横线
+        isHorizontalLine1 = true;
+      }
+      if (drawST[0]) {
+        isHorizontalLine1 ? this.drawStImgHorizontal(ctx, point1[0], point1[1], "start", isFromLeftToRight1) : this.drawStImgVertical(ctx, point1[0], point1[1], "start",isFromBottomToUp1)
+      }
+
+
+      let pointEnd1 = points[points.length - 2]; //倒数第二个点
+      let pointEnd2 = points[points.length - 1]; //倒数第一个点
+      let isHorizontalLine2 = false; //判断三通是不是横线，皮带尾部的三通线
+      let isFromLeftToRight2 = false; // 如果三通是横线，判断横线动画方向是不是从左到右。
+      let isFromBottomToUp2 = false;
+      if (pointEnd1[0] < pointEnd2[0]) {
+        ///从左到右
+        isFromLeftToRight2 = true;
+      }
+      let isFromBottomToUp = true; // 如果三通是竖线，判断横线动画方向是不是从下到上
+      if (pointEnd1[1] > pointEnd2[1]) {
+        //从下到上
+        isFromBottomToUp2 = true;
+      }
+      if (pointEnd1[1] == pointEnd2[1]) {
+        //说明是横线
+        isHorizontalLine2 = true;
+      }
+      if (drawST[1]) {
+        isHorizontalLine2 ? this.drawStImgHorizontal(ctx, pointEnd2[0], pointEnd2[1], "end", isFromLeftToRight2) : this.drawStImgVertical(ctx, pointEnd2[0], pointEnd2[1], "end", isFromBottomToUp2)
+      }
+      ctx.closePath();
+      ctx.restore();
+    },
+    //画水平的三通线
+    drawStImgHorizontal(ctx, x, y, isStart, isFromLeftToRight) {
+      // let ctx =  this.$data.ctx;
+      if (isStart == "start" && !isFromLeftToRight) {
+        x -= 42;
+      }
+      if (isStart == "end" && isFromLeftToRight) {
+        x -= 42;
+      }
+			let imageObj = new Image();
+			imageObj.src = require("../assets/horizontalST.png");
+			imageObj.onload = () => {
+				// ctx.save();
+				ctx.drawImage(imageObj, x, y - 3, 42, 6);
+				// ctx.restore();
+			};
+    },
+    //画竖直的三通线
+    drawStImgVertical(ctx, x, y, isStart, isFromBottomToUp) {
+      if (isStart == "start" && isFromBottomToUp) {
+        y -= 42;
+      }
+      if (isStart == "end" && !isFromBottomToUp) {
+        y -= 42;
+      }
+			let imageObj = new Image();
+			imageObj.src = require("../assets/verticalST.png");
+			imageObj.onload = () => {
+				// ctx.save();
+				ctx.drawImage(imageObj, x - 3, y, 6, 42);
+				// ctx.restore();
+			};
 		},
 		animation(ctx) {
 			cancelAnimationFrame(this.animationTimer);
@@ -779,7 +1000,7 @@ export default {
 
     },
     setPageScale(val, baseline) {
-      let newPageScale = (val / baseline).toFixed(3);
+      let newPageScale = (val / baseline).toFixed(3) - 0.07 ;
       if (this.transformBig && this.unitPageScale < newPageScale ) {
         this.unitPageScale = newPageScale;
       }
@@ -799,9 +1020,14 @@ export default {
       //   this.unitPageScaleTop = (val - 700) / 4;
       // }
 
-      if (val < 700) {
-        this.setPageScale(val, 700);
-      } else if (val >= 700 && val <= 1080) {
+      let newClientHeight = document.documentElement.clientHeight;
+      let baseline = 700;
+      if (newClientHeight > baseline) {
+        baseline = newClientHeight;
+      }
+      if (val < baseline) {
+        this.setPageScale(val, baseline);
+      } else if (val >= baseline && val <= 1080) {
         if (this.clientWidth >= 900) {
           this.unitPageScale = 1;
         }

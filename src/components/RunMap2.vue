@@ -2,7 +2,7 @@
 	<!-- <div class="run-map-page" :style="{ position: 'relative' , 'transform': 'scale(' + unitPageScale +')', top: unitPageScaleTop + 'px' }"> -->
 	<!-- <div class="run-map-page" :style="{ position: 'relative' , zoom: unitPageScale }"> -->
 	<div class="run-map-page">
-	<div class="canvas-box":style="{ zoom: unitPageScale }">
+	<div class="canvas-box" :style="{ zoom: unitPageScale }">
 		<canvas id="myCanvasBelt" width="850" height="650"></canvas>
 		<canvas id="myCanvas" width="850" height="720"></canvas>
 		<div 
