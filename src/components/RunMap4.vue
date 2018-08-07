@@ -209,6 +209,7 @@ export default {
 		},
 	},
 	mounted() {
+		this.handleClientHeight(document.documentElement.clientHeight);
 
 		this.ctx = document.getElementById("myCanvas").getContext("2d");
 		this.ctxBelt = document.getElementById("myCanvasBelt").getContext("2d");
@@ -1000,15 +1001,18 @@ export default {
 
     },
     setPageScale(val, baseline) {
-      let newPageScale = (val / baseline).toFixed(3) - 0.07 ;
-      if (this.transformBig && this.unitPageScale < newPageScale ) {
-        this.unitPageScale = newPageScale;
-      }
-      if (!this.transformBig && this.unitPageScale > newPageScale ) {
-        this.unitPageScale = newPageScale;
-      }
+			console.log(val, baseline)
+      let newPageScale = (val / baseline).toFixed(3)  ;
+      // if (this.transformBig && this.unitPageScale < newPageScale ) {
+      //   this.unitPageScale = newPageScale;
+      // }
+      // if (!this.transformBig && this.unitPageScale > newPageScale ) {
+      //   this.unitPageScale = newPageScale;
+			// }
+			this.unitPageScale = newPageScale;
     },
     handleClientHeight(val) {
+			console.log("handleClientHeight")
       // if (val < 700) {
       //   this.unitPageScale = (val / 700).toFixed(3);
       //   this.unitPageScaleTop = (val - 700) / 2;
@@ -1021,18 +1025,19 @@ export default {
       // }
 
       let newClientHeight = document.documentElement.clientHeight;
-      let baseline = 700;
-      if (newClientHeight > baseline) {
-        baseline = newClientHeight;
-      }
+      let baseline = 760;
+      // if (newClientHeight > baseline) {
+      //   baseline = newClientHeight;
+      // }
       if (val < baseline) {
         this.setPageScale(val, baseline);
       } else if (val >= baseline && val <= 1080) {
         if (this.clientWidth >= 900) {
-          this.unitPageScale = 1;
+					// this.unitPageScale = 1;
         }
+					this.setPageScale(val, 760);
       } else {
-          this.setPageScale(val, 1080);
+          this.setPageScale(val, 760);
       }
     },
     throttle(val, type = "width") {
