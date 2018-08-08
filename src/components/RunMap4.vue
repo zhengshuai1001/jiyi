@@ -746,47 +746,47 @@ export default {
       
 			// ctx.clearRect(0, 0, 850, 650);
 
-			this.drawST(ctx, [[710, 7], [65, 7]], "#FF423C", true); //11a1 最顶层的皮带, 1
-      this.drawST(ctx, [[710, 16], [65, 16]], "#FF423C", false); //11b1 从上往下第二个的皮带, 2
+			this.drawST(ctx, [[710, 7], [65, 7]], "#FF423C", true, [true, false]); //11a1 最顶层的皮带, 1
+      this.drawST(ctx, [[710, 16], [65, 16]], "#FF423C", false, [true, false]); //11b1 从上往下第二个的皮带, 2
       
 			this.drawST(ctx, [[this.lmqStartXOne, 7], [65, 7]], "#FF423C", false); //11a2  old:[710, 7], [30, 7] 左上角犁煤器左侧的皮带， 最顶层的皮带, 1
 			this.drawST(ctx, [[this.lmqStartXTwo, 16], [65, 16]], "#FF423C", false); //11b2 old:[710, 16], [30, 16] 左上角犁煤器左侧的皮带，从上往下第二个的皮带, 2
 
 
-			this.drawST(ctx, [[710, 80], [710, 7]], "#22AC38"); //10b old:[710, 120], [710, 7] 3,左 绿色
-			this.drawST(ctx, [[720, 80], [720, 7]], "#FF423C", true); //10a  old:[720, 120], [720, 7] 4,右 红色
+			this.drawST(ctx, [[710, 80], [710, 7]], "#22AC38", false, [false, true]); //10b old:[710, 120], [710, 7] 3,左 绿色
+			this.drawST(ctx, [[720, 80], [720, 7]], "#FF423C", true, [false, true]); //10a  old:[720, 120], [720, 7] 4,右 红色
 
-			this.drawST(ctx, [[710, 120], [710, 80]], "#22AC38"); //9b old:[710, 120], [710, 7] 增加转运站多的皮带， 3,左
-			this.drawST(ctx, [[720, 120], [720, 80]], "#FF423C", true); //9a  old:[720, 120], [720, 7]  增加转运站多的皮带，4,右
+			this.drawST(ctx, [[710, 120], [710, 80]], "#22AC38", true, [true, false]); //9b old:[710, 120], [710, 7] 增加转运站多的皮带， 3,左
+			this.drawST(ctx, [[720, 120], [720, 80]], "#FF423C", true, [true, false]); //9a  old:[720, 120], [720, 7]  增加转运站多的皮带，4,右
 
 			this.drawST(ctx, [[130, 128], [420, 128]], "#FF423C", true, [true, true]); //7    5, 上
 			this.drawST(ctx, [[420, 124], [710, 124]], "#FF423C", true, [true, true]); //8b   5, 上
-			this.drawST(ctx, [[420, 132], [710, 132]], "#22AC38"); //8a    6， 下
+			this.drawST(ctx, [[420, 132], [710, 132]], "#22AC38", false, [true, true]); //8a    6， 下
 
 			//斗轮机上面的皮带
 			this.drawST(ctx, [[135, this.dljPositionYThree], [135, 120]], "#FF423C", true, [false, true]); //6c2   7 左
-			this.drawST(ctx, [[425, this.dljPositionYTwo], [425, 120]], "#22AC38"); //6b2           8 中
-			this.drawST(ctx, [[715, this.dljPositionYOne], [715, 120]], "#22AC38"); //6a2           9 右
+			this.drawST(ctx, [[425, this.dljPositionYTwo], [425, 120]], "#22AC38", false, [false, true]); //6b2           8 中
+			this.drawST(ctx, [[715, this.dljPositionYOne], [715, 120]], "#22AC38", false, [false, true]); //6a2           9 右
 
 			//斗轮机下面的皮带
 			this.drawST(ctx, [[135, 550], [135, this.dljPositionYThree]], "#FF423C", true, [true, false]); //6c1           7 左
-			this.drawST(ctx, [[425, 550], [425, this.dljPositionYTwo]], "#22AC38", false); //6b1           8 中
-			this.drawST(ctx, [[715, 550], [715, this.dljPositionYOne]], "#22AC38", false); //6a1           9 右
+			this.drawST(ctx, [[425, 550], [425, this.dljPositionYTwo]], "#22AC38", false, [true, false]); //6b1           8 中
+			this.drawST(ctx, [[715, 550], [715, this.dljPositionYOne]], "#22AC38", false, [true, false]); //6a1           9 右
 
 
 
       this.drawST(ctx, [[710, 554], [425, 554]], "#FF423C", true, [true, true]); //4a          5, 上
       this.drawST(ctx, [[425, 554], [130, 554]], "#FF423C", true, [true, true]); //5a           5, 上
 
-			this.drawST(ctx, [[710, 562], [425, 562]], "#22AC38", false); //4b                 6， 下
+			this.drawST(ctx, [[710, 562], [425, 562]], "#22AC38", false, [false, true]); //4b                 6， 下
 			this.drawST(ctx, [[425, 562], [130, 562]], "#22AC38"); //5b                 6， 下
 
 
-			this.drawST(ctx, [[710, 595], [710, 562]], "#22AC38",false); //3b                 3,左
-			this.drawST(ctx, [[720, 595], [720, 562]], "#FF423C", true); //3a           4,右
+			this.drawST(ctx, [[710, 595], [710, 562]], "#22AC38",false, [true, false]); //3b                 3,左
+			this.drawST(ctx, [[720, 595], [720, 562]], "#FF423C", true, [true, true]); //3a           4,右
 
-			this.drawST(ctx, [[130, 630], [130, 597], [710, 597]], "#22AC38", false); //2b                5, 上
-			this.drawST(ctx, [[138, 630], [138, 605], [710, 605]], "#FF423C", true); //2a          6， 下
+			this.drawST(ctx, [[130, 630], [130, 597], [710, 597]], "#22AC38", false, [false, true]); //2b                5, 上
+			this.drawST(ctx, [[138, 630], [138, 605], [710, 605]], "#FF423C", true, [false, true]); //2a          6， 下
 
 			this.drawST(ctx, [[470, 634], [130, 634]], "#FF423C", true); //1a                      5, 上
       this.drawST(ctx, [[470, 642], [130, 642]], "#22AC38", false); //1b                     6， 下
@@ -1001,7 +1001,6 @@ export default {
 
     },
     setPageScale(val, baseline) {
-			console.log(val, baseline)
       let newPageScale = (val / baseline).toFixed(3)  ;
       // if (this.transformBig && this.unitPageScale < newPageScale ) {
       //   this.unitPageScale = newPageScale;
@@ -1012,7 +1011,6 @@ export default {
 			this.unitPageScale = newPageScale;
     },
     handleClientHeight(val) {
-			console.log("handleClientHeight")
       // if (val < 700) {
       //   this.unitPageScale = (val / 700).toFixed(3);
       //   this.unitPageScaleTop = (val - 700) / 2;
