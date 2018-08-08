@@ -657,7 +657,7 @@ export default {
 
 			//计算左上角犁煤器左侧的皮带所处的X轴的长度
 			this.drawDashedLine(ctx, [[710, 7], [65, 7]], "#FF423C", true); //11a1 最顶层的皮带, 1
-      this.drawDashedLine(ctx, [[710, 16], [65, 16]], "#FF423C", false); //11b1 从上往下第二个的皮带, 2
+      this.drawDashedLine(ctx, [[710, 16], [65, 16]], "#FF423C", true); //11b1 从上往下第二个的皮带, 2
       
 			this.drawDashedLine(ctx, [[this.lmqStartXOne, 7], [65, 7]], "#FF423C", false); //11a2  old:[710, 7], [30, 7] 左上角犁煤器左侧的皮带， 最顶层的皮带, 1
 			this.drawDashedLine(ctx, [[this.lmqStartXTwo, 16], [65, 16]], "#FF423C", false); //11b2 old:[710, 16], [30, 16] 左上角犁煤器左侧的皮带，从上往下第二个的皮带, 2
@@ -746,47 +746,47 @@ export default {
       
 			// ctx.clearRect(0, 0, 850, 650);
 
-			this.drawST(ctx, [[710, 7], [65, 7]], "#FF423C", true, [true, false]); //11a1 最顶层的皮带, 1
-      this.drawST(ctx, [[710, 16], [65, 16]], "#FF423C", false, [true, false]); //11b1 从上往下第二个的皮带, 2
+			this.drawST(ctx, [[710, 7], [65, 7]], "#FF423C", true, [true, false], ["b",""]); //11a1 最顶层的皮带, 1
+      this.drawST(ctx, [[710, 16], [65, 16]], "#FF423C", false, [true, false], ["a",""]); //11b1 从上往下第二个的皮带, 2
       
 			this.drawST(ctx, [[this.lmqStartXOne, 7], [65, 7]], "#FF423C", false); //11a2  old:[710, 7], [30, 7] 左上角犁煤器左侧的皮带， 最顶层的皮带, 1
 			this.drawST(ctx, [[this.lmqStartXTwo, 16], [65, 16]], "#FF423C", false); //11b2 old:[710, 16], [30, 16] 左上角犁煤器左侧的皮带，从上往下第二个的皮带, 2
 
 
-			this.drawST(ctx, [[710, 80], [710, 7]], "#22AC38", false, [false, true]); //10b old:[710, 120], [710, 7] 3,左 绿色
-			this.drawST(ctx, [[720, 80], [720, 7]], "#FF423C", true, [false, true]); //10a  old:[720, 120], [720, 7] 4,右 红色
+			this.drawST(ctx, [[710, 80], [710, 7]], "#22AC38", false, [false, true], ["","b"]); //10b old:[710, 120], [710, 7] 3,左 绿色
+			this.drawST(ctx, [[720, 80], [720, 7]], "#FF423C", true, [false, true], ["","a"]); //10a  old:[720, 120], [720, 7] 4,右 红色
 
-			this.drawST(ctx, [[710, 120], [710, 80]], "#22AC38", true, [true, false]); //9b old:[710, 120], [710, 7] 增加转运站多的皮带， 3,左
-			this.drawST(ctx, [[720, 120], [720, 80]], "#FF423C", true, [true, false]); //9a  old:[720, 120], [720, 7]  增加转运站多的皮带，4,右
+			this.drawST(ctx, [[710, 120], [710, 80]], "#22AC38", true, [true, false], ["a",""]); //9b old:[710, 120], [710, 7] 增加转运站多的皮带， 3,左
+			this.drawST(ctx, [[720, 120], [720, 80]], "#FF423C", true, [true, false], ["b",""]); //9a  old:[720, 120], [720, 7]  增加转运站多的皮带，4,右
 
-			this.drawST(ctx, [[130, 128], [420, 128]], "#FF423C", true, [true, true]); //7    5, 上
-			this.drawST(ctx, [[420, 124], [710, 124]], "#FF423C", true, [true, true]); //8b   5, 上
-			this.drawST(ctx, [[420, 132], [710, 132]], "#22AC38", false, [true, true]); //8a    6， 下
+			this.drawST(ctx, [[130, 128], [420, 128]], "#FF423C", true, [false, true], ["","a"]); //7    5, 上
+			this.drawST(ctx, [[420, 124], [710, 124]], "#FF423C", true, [true, true], ["b","b"]); //8b   5, 上
+			this.drawST(ctx, [[420, 132], [710, 132]], "#22AC38", false, [true, true], ["a","a"]); //8a    6， 下
 
 			//斗轮机上面的皮带
-			this.drawST(ctx, [[135, this.dljPositionYThree], [135, 120]], "#FF423C", true, [false, true]); //6c2   7 左
-			this.drawST(ctx, [[425, this.dljPositionYTwo], [425, 120]], "#22AC38", false, [false, true]); //6b2           8 中
-			this.drawST(ctx, [[715, this.dljPositionYOne], [715, 120]], "#22AC38", false, [false, true]); //6a2           9 右
+			this.drawST(ctx, [[135, this.dljPositionYThree], [135, 120]], "#FF423C", true, [false, false]); //6c2   7 左
+			this.drawST(ctx, [[425, this.dljPositionYTwo], [425, 120]], "#22AC38", false, [false, true], ["","b"]); //6b2           8 中
+			this.drawST(ctx, [[715, this.dljPositionYOne], [715, 120]], "#22AC38", false, [false, true], ["","a"]); //6a2           9 右
 
 			//斗轮机下面的皮带
-			this.drawST(ctx, [[135, 550], [135, this.dljPositionYThree]], "#FF423C", true, [true, false]); //6c1           7 左
-			this.drawST(ctx, [[425, 550], [425, this.dljPositionYTwo]], "#22AC38", false, [true, false]); //6b1           8 中
+			this.drawST(ctx, [[135, 550], [135, this.dljPositionYThree]], "#FF423C", true, [false, false]); //6c1           7 左
+			this.drawST(ctx, [[425, 550], [425, this.dljPositionYTwo]], "#22AC38", false, [true, false], ["b",""]); //6b1           8 中
 			this.drawST(ctx, [[715, 550], [715, this.dljPositionYOne]], "#22AC38", false, [true, false]); //6a1           9 右
 
 
 
-      this.drawST(ctx, [[710, 554], [425, 554]], "#FF423C", true, [true, true]); //4a          5, 上
-      this.drawST(ctx, [[425, 554], [130, 554]], "#FF423C", true, [true, true]); //5a           5, 上
+      this.drawST(ctx, [[710, 554], [425, 554]], "#FF423C", true, [true, true], ["a","a"]); //4a          5, 上
+      this.drawST(ctx, [[425, 554], [130, 554]], "#FF423C", true, [true, false], ["a",""]); //5a           5, 上
 
-			this.drawST(ctx, [[710, 562], [425, 562]], "#22AC38", false, [false, true]); //4b                 6， 下
+			this.drawST(ctx, [[710, 562], [425, 562]], "#22AC38", false, [false, true], ["b","b"]); //4b                 6， 下
 			this.drawST(ctx, [[425, 562], [130, 562]], "#22AC38"); //5b                 6， 下
 
 
-			this.drawST(ctx, [[710, 595], [710, 562]], "#22AC38",false, [true, false]); //3b                 3,左
-			this.drawST(ctx, [[720, 595], [720, 562]], "#FF423C", true, [true, true]); //3a           4,右
+			this.drawST(ctx, [[710, 595], [710, 562]], "#22AC38",false, [true, false], ["b","b"]); //3b                 3,左
+			this.drawST(ctx, [[720, 595], [720, 562]], "#FF423C", true, [true, true], ["a","a"]); //3a           4,右
 
-			this.drawST(ctx, [[130, 630], [130, 597], [710, 597]], "#22AC38", false, [false, true]); //2b                5, 上
-			this.drawST(ctx, [[138, 630], [138, 605], [710, 605]], "#FF423C", true, [false, true]); //2a          6， 下
+			this.drawST(ctx, [[130, 630], [130, 597], [710, 597]], "#22AC38", false, [false, true], ["","b"]); //2b                5, 上
+			this.drawST(ctx, [[138, 630], [138, 605], [710, 605]], "#FF423C", true, [false, true], ["","a"]); //2a          6， 下
 
 			this.drawST(ctx, [[470, 634], [130, 634]], "#FF423C", true); //1a                      5, 上
       this.drawST(ctx, [[470, 642], [130, 642]], "#22AC38", false); //1b                     6， 下
@@ -797,8 +797,8 @@ export default {
     },
     //画三通, 画一条三通， 三通和皮带是一起的，相当于是皮带的起始点和结尾点的属性，
     //由于皮带是动画，三通不是动画，于是分开渲染，通过皮带的定位参数，求得三通的定位参数
-    //其实前面几个参数都没啥作用，只有最后面的drawST，才判断是否需要画三通，
-    drawST(ctx, points, color = "#FF423C", clearArea = null, drawST = [false, false]) {
+    //其实前面几个参数都没啥作用，需要的只是points定位位置，只有最后面的drawST，才判断是否需要画三通，判断是画实线还是虚线，根据a路用实线和b路用虚线，默认虚线
+    drawST(ctx, points, color = "#FF423C", clearArea = null, isDrawST = [false, false], lineType = ["b","b"]) {
       //画三通
       ctx.save();
       ctx.beginPath();
@@ -821,8 +821,8 @@ export default {
         //说明是横线
         isHorizontalLine1 = true;
       }
-      if (drawST[0]) {
-        isHorizontalLine1 ? this.drawStImgHorizontal(ctx, point1[0], point1[1], "start", isFromLeftToRight1) : this.drawStImgVertical(ctx, point1[0], point1[1], "start",isFromBottomToUp1)
+      if (isDrawST[0]) {
+        isHorizontalLine1 ? this.drawStImgHorizontal(ctx, point1[0], point1[1], "start", isFromLeftToRight1, lineType[0]) : this.drawStImgVertical(ctx, point1[0], point1[1], "start",isFromBottomToUp1, lineType[0])
       }
 
 
@@ -844,14 +844,14 @@ export default {
         //说明是横线
         isHorizontalLine2 = true;
       }
-      if (drawST[1]) {
-        isHorizontalLine2 ? this.drawStImgHorizontal(ctx, pointEnd2[0], pointEnd2[1], "end", isFromLeftToRight2) : this.drawStImgVertical(ctx, pointEnd2[0], pointEnd2[1], "end", isFromBottomToUp2)
+      if (isDrawST[1]) {
+        isHorizontalLine2 ? this.drawStImgHorizontal(ctx, pointEnd2[0], pointEnd2[1], "end", isFromLeftToRight2, lineType[1]) : this.drawStImgVertical(ctx, pointEnd2[0], pointEnd2[1], "end", isFromBottomToUp2, lineType[1])
       }
       ctx.closePath();
       ctx.restore();
     },
     //画水平的三通线
-    drawStImgHorizontal(ctx, x, y, isStart, isFromLeftToRight) {
+    drawStImgHorizontal(ctx, x, y, isStart, isFromLeftToRight, lineType = "b") {
       // let ctx =  this.$data.ctx;
       if (isStart == "start" && !isFromLeftToRight) {
         x -= 42;
@@ -860,15 +860,16 @@ export default {
         x -= 42;
       }
 			let imageObj = new Image();
-			imageObj.src = require("../assets/horizontalST.png");
+			let imgSrc = lineType == "a" ? require("../assets/horizontalSTSolid.png") : require("../assets/horizontalST.png");
+			imageObj.src = imgSrc;
 			imageObj.onload = () => {
 				// ctx.save();
-				ctx.drawImage(imageObj, x, y - 3, 42, 6);
+				ctx.drawImage(imageObj, x, y - 3, 42, 7);
 				// ctx.restore();
 			};
     },
     //画竖直的三通线
-    drawStImgVertical(ctx, x, y, isStart, isFromBottomToUp) {
+    drawStImgVertical(ctx, x, y, isStart, isFromBottomToUp, lineType = "b") {
       if (isStart == "start" && isFromBottomToUp) {
         y -= 42;
       }
@@ -876,10 +877,11 @@ export default {
         y -= 42;
       }
 			let imageObj = new Image();
-			imageObj.src = require("../assets/verticalST.png");
+			let imgSrc = lineType == "a" ? require("../assets/verticalSTSolid.png") : require("../assets/verticalST.png")
+			imageObj.src = imgSrc;
 			imageObj.onload = () => {
 				// ctx.save();
-				ctx.drawImage(imageObj, x - 3, y, 6, 42);
+				ctx.drawImage(imageObj, x - 3, y, 7, 42);
 				// ctx.restore();
 			};
 		},
