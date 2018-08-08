@@ -753,8 +753,8 @@ export default {
 			this.drawST(ctx, [[this.lmqStartXTwo, 16], [65, 16]], "#FF423C", false); //11b2 old:[710, 16], [30, 16] 左上角犁煤器左侧的皮带，从上往下第二个的皮带, 2
 
 
-			this.drawST(ctx, [[710, 80], [710, 7]], "#22AC38", false, [false, true], ["","b"]); //10b old:[710, 120], [710, 7] 3,左 绿色
-			this.drawST(ctx, [[720, 80], [720, 7]], "#FF423C", true, [false, true], ["","a"]); //10a  old:[720, 120], [720, 7] 4,右 红色
+			this.drawST(ctx, [[710, 80], [710, 7]], "#22AC38", false, [false, true], ["","b"], "10b"); //10b old:[710, 120], [710, 7] 3,左 绿色
+			this.drawST(ctx, [[720, 80], [720, 7]], "#FF423C", true, [false, true], ["","a"], "10a"); //10a  old:[720, 120], [720, 7] 4,右 红色
 
 			this.drawST(ctx, [[710, 120], [710, 80]], "#22AC38", true, [true, false], ["a",""]); //9b old:[710, 120], [710, 7] 增加转运站多的皮带， 3,左
 			this.drawST(ctx, [[720, 120], [720, 80]], "#FF423C", true, [true, false], ["b",""]); //9a  old:[720, 120], [720, 7]  增加转运站多的皮带，4,右
@@ -776,14 +776,14 @@ export default {
 
 
       this.drawST(ctx, [[710, 554], [425, 554]], "#FF423C", true, [true, true], ["a","a"]); //4a          5, 上
-      this.drawST(ctx, [[425, 554], [130, 554]], "#FF423C", true, [true, false], ["a",""]); //5a           5, 上
+      this.drawST(ctx, [[425, 554], [130, 554]], "#FF423C", true, [true, false], ["a",""], "5a"); //5a           5, 上
 
 			this.drawST(ctx, [[710, 562], [425, 562]], "#22AC38", false, [false, true], ["b","b"]); //4b                 6， 下
-			this.drawST(ctx, [[425, 562], [130, 562]], "#22AC38"); //5b                 6， 下
+			this.drawST(ctx, [[425, 562], [130, 562]], "#22AC38", false, [false, false], ["",""], "5b"); //5b                 6， 下
 
 
-			this.drawST(ctx, [[710, 595], [710, 562]], "#22AC38",false, [true, false], ["b","b"]); //3b                 3,左
-			this.drawST(ctx, [[720, 595], [720, 562]], "#FF423C", true, [true, true], ["a","a"]); //3a           4,右
+			this.drawST(ctx, [[710, 595], [710, 562]], "#22AC38",false, [true, false], ["b","b"], "3b"); //3b                 3,左
+			this.drawST(ctx, [[720, 595], [720, 562]], "#FF423C", true, [true, true], ["a","a"], "3a"); //3a           4,右
 
 			this.drawST(ctx, [[130, 630], [130, 597], [710, 597]], "#22AC38", false, [false, true], ["","b"]); //2b                5, 上
 			this.drawST(ctx, [[138, 630], [138, 605], [710, 605]], "#FF423C", true, [false, true], ["","a"]); //2a          6， 下
@@ -798,7 +798,7 @@ export default {
     //画三通, 画一条三通， 三通和皮带是一起的，相当于是皮带的起始点和结尾点的属性，
     //由于皮带是动画，三通不是动画，于是分开渲染，通过皮带的定位参数，求得三通的定位参数
     //其实前面几个参数都没啥作用，需要的只是points定位位置，只有最后面的drawST，才判断是否需要画三通，判断是画实线还是虚线，根据a路用实线和b路用虚线，默认虚线
-    drawST(ctx, points, color = "#FF423C", clearArea = null, isDrawST = [false, false], lineType = ["b","b"]) {
+    drawST(ctx, points, color = "#FF423C", clearArea = null, isDrawST = [false, false], lineType = ["b","b"], lineNumber) {
       //画三通
       ctx.save();
       ctx.beginPath();
@@ -822,7 +822,7 @@ export default {
         isHorizontalLine1 = true;
       }
       if (isDrawST[0]) {
-        isHorizontalLine1 ? this.drawStImgHorizontal(ctx, point1[0], point1[1], "start", isFromLeftToRight1, lineType[0]) : this.drawStImgVertical(ctx, point1[0], point1[1], "start",isFromBottomToUp1, lineType[0])
+        isHorizontalLine1 ? this.drawStImgHorizontal(ctx, point1[0], point1[1], "start", isFromLeftToRight1, lineType[0], lineNumber) : this.drawStImgVertical(ctx, point1[0], point1[1], "start",isFromBottomToUp1, lineType[0], lineNumber)
       }
 
 
@@ -845,43 +845,77 @@ export default {
         isHorizontalLine2 = true;
       }
       if (isDrawST[1]) {
-        isHorizontalLine2 ? this.drawStImgHorizontal(ctx, pointEnd2[0], pointEnd2[1], "end", isFromLeftToRight2, lineType[1]) : this.drawStImgVertical(ctx, pointEnd2[0], pointEnd2[1], "end", isFromBottomToUp2, lineType[1])
+        isHorizontalLine2 ? this.drawStImgHorizontal(ctx, pointEnd2[0], pointEnd2[1], "end", isFromLeftToRight2, lineType[1], lineNumber) : this.drawStImgVertical(ctx, pointEnd2[0], pointEnd2[1], "end", isFromBottomToUp2, lineType[1], lineNumber)
       }
       ctx.closePath();
       ctx.restore();
     },
     //画水平的三通线
-    drawStImgHorizontal(ctx, x, y, isStart, isFromLeftToRight, lineType = "b") {
+    drawStImgHorizontal(ctx, x, y, isStart, isFromLeftToRight, lineType = "b", lineNumber) {
+			if (lineType.length < 1) {
+				return;
+			}
       // let ctx =  this.$data.ctx;
       if (isStart == "start" && !isFromLeftToRight) {
-        x -= 42;
-      }
-      if (isStart == "end" && isFromLeftToRight) {
-        x -= 42;
-      }
+        x -= 42 - 22 - 5;
+      } else if (isStart == "end" && isFromLeftToRight) {
+        x -= 42 - 22 - 5;
+      } else if (isStart == "start"  && isFromLeftToRight) {
+				x -= -5;
+			} else if (isStart == "end" && !isFromLeftToRight) {
+				x -= 0;
+			}
+			if (lineNumber == "5a" && isStart == "start") {
+				x -= 5;
+			}
+			if (lineNumber == "5b" && isStart == "start") {
+				x -= 5;
+			}
 			let imageObj = new Image();
 			let imgSrc = lineType == "a" ? require("../assets/horizontalSTSolid.png") : require("../assets/horizontalST.png");
 			imageObj.src = imgSrc;
 			imageObj.onload = () => {
 				// ctx.save();
-				ctx.drawImage(imageObj, x, y - 3, 42, 7);
+				ctx.drawImage(imageObj, x, y - 4, 22, 8);
 				// ctx.restore();
 			};
     },
     //画竖直的三通线
-    drawStImgVertical(ctx, x, y, isStart, isFromBottomToUp, lineType = "b") {
+    drawStImgVertical(ctx, x, y, isStart, isFromBottomToUp, lineType = "b", lineNumber) {
+			if (lineType.length < 1) {
+				return;
+			}
       if (isStart == "start" && isFromBottomToUp) {
-        y -= 42;
-      }
-      if (isStart == "end" && !isFromBottomToUp) {
-        y -= 42;
-      }
+        y -= 42 - 28;
+      } else if (isStart == "end" && !isFromBottomToUp) {
+        y -= 42 - 28;
+      } else if (isStart == "start" && !isFromBottomToUp) {
+				y -= 5;
+			} else if (isStart == "end" && isFromBottomToUp) {
+				y -= -5;
+			}
+			if (lineNumber == "3a" && isStart == "end") {
+				y -= 15;
+			} else if (lineNumber == "3a" && isStart == "start") {
+				y -= -3;
+			}
+			if (lineNumber == "3b" && isStart == "end") {
+				y -= 15;
+			} else if (lineNumber == "3b" && isStart == "start") {
+				y -= -3;
+			}
+			if (lineNumber == "10a" && isStart == "end") {
+				y -= 5;
+			}
+			if (lineNumber == "10b" && isStart == "end") {
+				y -= 5;
+			}
 			let imageObj = new Image();
 			let imgSrc = lineType == "a" ? require("../assets/verticalSTSolid.png") : require("../assets/verticalST.png")
 			imageObj.src = imgSrc;
 			imageObj.onload = () => {
 				// ctx.save();
-				ctx.drawImage(imageObj, x - 3, y, 7, 42);
+				ctx.drawImage(imageObj, x - 3, y, 6, 22);
 				// ctx.restore();
 			};
 		},
