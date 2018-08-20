@@ -8,8 +8,7 @@
 
 <script>
 // import HelloWorld from './components/HelloWorld'
-import Unit from "./components/Unit";
-import RunMap from "./components/RunMap";
+import Unit from "./components/Unit3";
 
 export default {
   name: 'App',

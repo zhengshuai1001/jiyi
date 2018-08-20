@@ -1,5 +1,5 @@
 import Vue from "vue";
-import RunMap from "../components/RunMap4.vue";
+import RunMap from "../components/RunMap5.vue";
 
 import { Row, Col } from 'iview';
 import 'iview/dist/styles/iview.css';

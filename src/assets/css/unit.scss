@@ -76,17 +76,21 @@ body{
 }
 .color-box-out .color-box .color{
 	width: 100%;
+	position: absolute;
+	bottom: 0;
 }
 .color-box-out .color-box .color-0{
-	height: 20%;
+	// height: 20%;
+	height: 100%;
 }
 .color-box-out .color-box .color-1{
 	background-color: #ef9520;
-	height: 40%;
+	// height: 40%;
+	// height: 80%;
 }
 .color-box-out .color-box .color-2{
 	background-color: #0ff;
-	height: 40%;
+	// height: 40%;
 }
 .middle{
 	margin-bottom: 5px;
